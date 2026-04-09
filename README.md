@@ -113,11 +113,4 @@ your-project/
 
 ---
 
-## Related
-
-- **[tech-review](https://github.com/gone3d/tech-review)**: Broader developer guide for new grads and career-changers
-- **VoodooCode**: YouTube/content series covering real-world development workflows
-
----
-
 *Built with Claude Code. Documented so you don't have to figure it out from scratch.*
