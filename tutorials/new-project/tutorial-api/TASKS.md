@@ -1,7 +1,7 @@
 # TASKS.md: Tutorial API Milestone Tracker
 
 **Last Updated**: 2026-04-10
-**Current Version**: 0.0.1.6
+**Current Version**: 0.0.2.5
 
 ---
 
@@ -9,7 +9,7 @@
 
 | Milestone | Status | Date Completed | Tasks | Description |
 |---|---|---|---|---|
-| _(none yet)_ | | | | |
+| [0.0.1.0](./tasks/Milestone0.0.1.0.md) | ✅ Complete | 2026-04-10 | 7/7 | Project setup and scaffolding |
 
 ---
 
@@ -17,7 +17,7 @@
 
 | Milestone | Status | Priority | Description |
 |---|---|---|---|
-| [0.0.1.0](./tasks/Milestone0.0.1.0.md) | ✅ Complete | SETUP | Project setup and scaffolding |
+| [0.0.2.0](./tasks/Milestone0.0.2.0.md) | ✅ Complete | HIGH | Database schema, migrations, and types |
 
 ---
 
@@ -25,7 +25,7 @@
 
 | Milestone | Status | Priority | Description |
 |---|---|---|---|
-| [0.0.2.0](./tasks/Milestone0.0.2.0.md) | Planning | HIGH | Database schema, migrations, and types |
+| _(plan milestones as needed)_ | | | |
 
 ---
 
