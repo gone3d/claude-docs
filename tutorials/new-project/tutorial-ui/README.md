@@ -4,6 +4,16 @@ Frontend for the Tutorial App. A simple task management application built with R
 
 This repo is used as a walkthrough for the [claude-docs skill system](../../docs/Tutorial.md).
 
+## System Requirements
+
+Before starting, make sure you have these installed:
+
+| Requirement | Version | Check | Install |
+|---|---|---|---|
+| Node.js | 18+ | `node --version` | [nodejs.org](https://nodejs.org) or `brew install node` |
+| npm | 9+ | `npm --version` | Comes with Node.js |
+| Git | 2.x | `git --version` | `brew install git` or [git-scm.com](https://git-scm.com) |
+
 ## Tech Stack
 
 - React 18 + TypeScript + Vite

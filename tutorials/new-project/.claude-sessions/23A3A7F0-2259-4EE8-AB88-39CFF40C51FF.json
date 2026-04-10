@@ -1,0 +1,10 @@
+{
+  "terminalId": "23A3A7F0-2259-4EE8-AB88-39CFF40C51FF",
+  "label": "tutorial-api",
+  "baseDir": "/Users/don/Projects 2/GitHub/claude-docs/tutorials/new-project",
+  "projects": {
+    "primary": "tutorial-api"
+  },
+  "startedAt": "2026-04-10T00:00:00.000Z",
+  "activeMilestone": "0.0.1.0"
+}

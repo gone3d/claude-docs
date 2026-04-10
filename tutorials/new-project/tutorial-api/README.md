@@ -4,6 +4,30 @@ Backend REST API for the Tutorial App. Provides CRUD endpoints for tasks and cat
 
 This repo is used as a walkthrough for the [claude-docs skill system](../../docs/Tutorial.md).
 
+## System Requirements
+
+Before starting, make sure you have these installed:
+
+| Requirement | Version | Check | Install |
+|---|---|---|---|
+| Node.js | 18+ | `node --version` | [nodejs.org](https://nodejs.org) or `brew install node` |
+| npm | 9+ | `npm --version` | Comes with Node.js |
+| PostgreSQL | 14+ | `psql --version` | `brew install postgresql@16` then `brew services start postgresql@16` |
+| Git | 2.x | `git --version` | `brew install git` or [git-scm.com](https://git-scm.com) |
+
+**PostgreSQL setup:**
+```bash
+# macOS with Homebrew
+brew install postgresql@16
+brew services start postgresql@16
+
+# Create the database
+createdb tutorial_app
+
+# Verify
+psql tutorial_app -c "SELECT 1"
+```
+
 ## Tech Stack
 
 - Node.js + Express + TypeScript
