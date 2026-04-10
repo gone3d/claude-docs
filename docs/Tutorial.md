@@ -28,6 +28,15 @@ After you complete the tutorial, compare your results to `tutorials/new-project/
 
 Use the `tutorials/blank-project/` folder as your starting point, or create your own.
 
+### Permissions Tip
+
+The skills run a bash command (`echo "${TERM_SESSION_ID:-...}"`) every time they need your terminal ID. Claude Code will prompt you to approve this repeatedly unless you adjust permissions. To avoid this:
+
+- Press `Shift+Tab` to cycle to a more permissive mode, or
+- When prompted, choose "Always allow" to persist the permission for the session
+
+This is a one-time annoyance. Once allowed, the skills run without interruption.
+
 ---
 
 ## Step 1: Start Claude Code from your GitHub root
