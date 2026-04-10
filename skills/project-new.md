@@ -1,5 +1,7 @@
 Scaffold a complete project management document set for a new project. Generates lean, structured files that serve as living reference, not growing logs. All session history and implementation detail stays in milestone files.
 
+**This skill is proactive.** Read existing files first, extract what you can, only ask about what's missing, then generate all files and report. Do not stop after asking questions. The goal is to go from an empty (or near-empty) repo to a fully scaffolded project in one conversation.
+
 ---
 
 ## Step 1: Load Session + Parse Arguments
@@ -13,42 +15,87 @@ $ARGUMENTS may contain a project folder name. If so, generate files there. If no
 
 ---
 
-## Step 2: Gather Project Information
+## Step 2: Read Existing Files
 
-Ask for any information not already provided. Gather all answers before generating. Do not generate files one at a time between questions.
+Read ALL existing files in the target folder before asking any questions. Look for:
 
-Ask these questions (skip any already answered in $ARGUMENTS):
+- `README.md` (often contains project description, tech stack, API endpoints, DB schema)
+- `package.json` (project name, version, dependencies reveal tech stack)
+- Any other `.md` files (architecture docs, planning docs, etc.)
+- Any existing `src/` or `functions/` structure (reveals framework choices)
 
-1. **Project name**: what is it called?
-2. **What are you building?** One paragraph describing the product and its purpose
-3. **Who is it for?** Target users and their primary use cases
-4. **Tech stack:**
-   - Frontend: framework, language, styling (e.g. React + TypeScript + Tailwind + Vite)
-   - Backend: runtime, framework (e.g. Cloudflare Workers + Hono, Node + Express, none)
-   - Database: type and platform (e.g. Cloudflare D1/SQLite, PostgreSQL, Supabase, none)
-   - Hosting/deployment: (e.g. Cloudflare Pages, Vercel, Railway)
-5. **Repository structure?** How many repos, and what role does each play? Not every project needs an API, and some may need more than two repos (e.g. a UI, an API, and an AI service). List folder names and their purpose (e.g. `my-app-ui` = frontend, `my-app-api` = backend, `my-app-ai` = ML pipeline)
-6. **MVP definition**: what is the smallest useful version of this product? List 3–5 core features only.
-7. **Reference projects**: any existing repos to pull patterns from? (optional)
-8. **Developer name**: used for branch naming convention (e.g. `don`)
-
-Once all answers are collected, confirm the list with the user before generating.
+Extract as much as possible:
+- Project name (from package.json name field, README title, or folder name)
+- Tech stack (from dependencies, README, or file structure)
+- Database schema (from README, SQL files, or migration folders)
+- API endpoints (from README, route files, or existing docs)
+- Who it's for (from README description)
+- MVP features (from README feature lists)
 
 ---
 
-## Step 3: Determine Starting Version
+## Step 3: Present Findings and Fill Gaps
 
-Ask: "What version should this project start at?" Default is `0.1.0.0` if they don't have a preference. Explain the versioning convention if they seem unfamiliar:
-- `MAJOR.MINOR.PATCH.BUILD`
-- BUILD increments with each task completion (allows incremental deployment)
-- PATCH increments with each new milestone
-- v0.x.x.x = development, v0.9.x.x = beta/MVP, v1.0.x.x = production
+Show the user what you found:
+
+```
+Based on your existing files, here's what I have:
+
+Project name: [extracted or folder name]
+Description: [from README or "not found"]
+Tech stack: [from package.json/README or "not found"]
+Database: [from README schema or "not found"]
+Repository structure: [from sibling folders or "single repo"]
+Developer name: [from git config or "not found"]
+
+Missing information I need from you:
+- [only list what's genuinely missing]
+```
+
+**Rules:**
+- If the README has a clear project description, don't ask "what are you building?"
+- If package.json has React in dependencies, don't ask about the frontend framework
+- If the README has a DB schema, don't ask about the database
+- If there's only one folder and no sibling repos, assume single repo
+- For developer name, try `git config user.name` first
+- For starting version, default to `0.0.0.0` if no package.json exists. If package.json exists, use its version.
+
+**Only ask the user about information you genuinely cannot determine from existing files.**
+
+If everything is covered by existing files, confirm the summary and proceed directly to generation. Do not ask questions you already know the answers to.
 
 ---
 
-## Step 4: Generate Files
+## Step 4: Confirm and Generate
+
+After filling gaps, show a final summary:
+
+```
+Ready to generate project files with these settings:
+
+Project: [name]
+Description: [one line]
+Tech: [frontend] + [backend] + [database]
+Repos: [structure]
+Starting version: [version]
+Developer: [name]
+
+I'll create: CLAUDE.md, ARCHITECTURE.md, PRD.md, TASKS.md, 
+tasks/MilestoneTemplate.md, tasks/Milestone0.0.1.0.md,
+bugs/BugFixTemplate.md, screenshots/
+
+Proceed? (yes to generate, or tell me what to change)
+```
+
+Wait for confirmation, then generate all files.
+
+---
+
+## Step 5: Generate Files
 
 Create the following files in the target project folder. Each file has a defined scope. Do not add content that belongs in another file.
+
+**Use everything you learned from existing files.** If the README has a DB schema, put it in ARCHITECTURE.md. If it has API endpoints, reference them in ARCHITECTURE.md and PRD.md. If it has TypeScript types, include them in the architecture.
 
 ---
 
@@ -79,7 +126,7 @@ Create the following files in the target project folder. Each file has a defined
 
 ## Current Status
 
-**Phase**: Milestone 0, Project Initialization
+**Phase**: Milestone 0.0.1.0, Project Initialization
 **Last Updated**: [today's date]
 **Version**: [starting version]
 
@@ -87,7 +134,7 @@ Create the following files in the target project folder. Each file has a defined
 _(none yet)_
 
 ### Active Milestone
-- **Milestone 0**: Project setup and scaffolding. 🚧 In Progress
+- **Milestone 0.0.1.0**: Project setup and scaffolding
 
 ---
 
@@ -111,18 +158,18 @@ _(none yet)_
 
 **Branch Naming:**
 - `[developer]-MMDDYY-[VERSION]-[ui|api]`
-- Example: `don-041026-0.0.1.0-ui`
+- Example: `[developer]-041026-0.0.1.0-ui`
 
 **Version Bumping:**
-- Each task completion: BUILD +1 (e.g. `0.1.0.0` → `0.1.0.1`)
-- Each new milestone: PATCH +1, BUILD resets to 0 (e.g. `0.1.0.N` → `0.1.1.0`)
+- Each task completion: BUILD +1 (e.g. `0.0.1.0` -> `0.0.1.1`)
+- Each new milestone: PATCH +1, BUILD resets to 0 (e.g. `0.0.1.N` -> `0.0.2.0`)
 
 **Session Start:**
 Run `/session-start [folder(s)]` at the start of every terminal session.
 
 **Milestone Workflow:**
 - Task 0 of every milestone: check versions, create branches (with user approval)
-- All detail, session notes, and implementation specifics go in `./tasks/MilestoneX.X.md`
+- All detail, session notes, and implementation specifics go in milestone files
 - This file stays concise. It is a reference, not a log
 
 ---
@@ -132,10 +179,12 @@ Run `/session-start [folder(s)]` at the start of every terminal session.
 | File | Purpose |
 |---|---|
 | `CLAUDE.md` | This file. Session guide and workflow reference |
-| `ARCHITECTURE.md` | Technical architecture, patterns, component library, ADR log |
+| `ARCHITECTURE.md` | Technical architecture, patterns, ADR log |
 | `PRD.md` | Product requirements: vision, goals, users, MVP |
 | `TASKS.md` | Milestone status dashboard |
 | `./tasks/` | Detailed milestone files. All implementation detail lives here |
+| `./bugs/` | Bug fix tracking files |
+| `./screenshots/` | Bug fix screenshots |
 ```
 
 ---
@@ -146,7 +195,7 @@ Run `/session-start [folder(s)]` at the start of every terminal session.
 
 **What it does NOT contain**: Session notes, task-level decisions (those stay in milestone files until they graduate to being truly architectural), implementation steps.
 
-**File management**: Add to this file only when something becomes an established pattern or a decision is final. Prefer referencing milestone files for in-progress decisions.
+**Important**: If the README or other existing files contain database schemas, API endpoint lists, TypeScript types, or component structures, incorporate that content into the appropriate sections. Do not leave sections as "TBD" when the information is available.
 
 ```markdown
 # ARCHITECTURE.md: [Project Name]
@@ -157,11 +206,11 @@ Run `/session-start [folder(s)]` at the start of every terminal session.
 
 ## System Overview
 
-[2–3 sentence description of the overall architecture, what talks to what]
+[2-3 sentence description of the overall architecture, what talks to what]
 
 ### Architecture Diagram (text)
 ```
-[Browser] → [Frontend: platform/URL]
+[Browser] -> [Frontend: platform/URL]
                 ↓ REST API
            [Backend: platform/URL]
                 ↓
@@ -174,23 +223,23 @@ Run `/session-start [folder(s)]` at the start of every terminal session.
 
 ### Frontend ([repo name])
 - **Framework**: [e.g. React 18 + TypeScript + Vite]
-- **Styling**: [e.g. Tailwind CSS with custom theme system]
+- **Styling**: [e.g. Tailwind CSS]
 - **State Management**: [e.g. Zustand v5]
 - **Routing**: [e.g. React Router v6.4+]
 - **Testing**: [e.g. Vitest]
-- **Deployment**: [e.g. Cloudflare Pages, auto-deploy from main]
+- **Deployment**: [e.g. Vercel, auto-deploy from main]
 
 ### Backend ([repo name or N/A])
-- **Runtime**: [e.g. Cloudflare Workers]
-- **Framework**: [e.g. Hono]
+- **Runtime**: [e.g. Node.js]
+- **Framework**: [e.g. Express]
 - **Auth**: [e.g. Session token + RBAC]
-- **Testing**: [e.g. none yet]
-- **Deployment**: [e.g. Cloudflare Workers, auto-deploy from main]
+- **Testing**: [e.g. Vitest]
+- **Deployment**: [e.g. Railway, auto-deploy from main]
 
 ### Database
-- **Platform**: [e.g. Cloudflare D1 / SQLite]
-- **Schema**: [e.g. `migrations/INIT_DB.sql`]
-- **ORM/Query**: [e.g. raw SQL via D1 binding]
+- **Platform**: [e.g. PostgreSQL]
+- **Schema**: [include full schema if found in README or existing files]
+- **ORM/Query**: [e.g. Prisma, raw SQL]
 
 ---
 
@@ -202,7 +251,7 @@ src/
 ├── components/    # Reusable UI components
 │   └── ui/        # Design system components
 ├── pages/         # Route-level page components
-├── stores/        # Zustand state stores
+├── stores/        # State management
 ├── hooks/         # Custom React hooks
 ├── services/      # API service layer
 └── types/         # TypeScript type definitions
@@ -215,16 +264,18 @@ _(Add patterns here as they are established)_
 
 ## Backend Architecture
 
+### API Endpoints
+[If found in README, include the full endpoint table here]
+
 ### API Structure
 ```
-functions/
-├── api/     # Public endpoints
-└── admin/   # Protected endpoints
-lib/
-├── database/    # Repositories
-├── services/    # Business logic
-├── middleware/  # Auth, CORS, rate limiting
-└── types/       # TypeScript types
+src/
+├── routes/        # Route handlers
+├── controllers/   # Request/response logic
+├── services/      # Business logic
+├── middleware/     # Auth, CORS, validation
+├── models/        # Database models
+└── types/         # TypeScript types
 ```
 
 ### Key Patterns
@@ -232,17 +283,16 @@ _(Add patterns here as they are established)_
 
 ---
 
+## Database Schema
+
+[If found in README or SQL files, include the full schema here with tables, columns, types, constraints, and indexes]
+
+---
+
 ## Architectural Decisions (ADR Log)
 
 > Record decisions here when they are final and architectural in scope.
 > Task-level decisions belong in the milestone file where they were made.
-
-### ADR-001: [First major decision]
-**Date**: [date]
-**Status**: Accepted
-**Context**: [What problem, what constraints]
-**Decision**: [What was decided]
-**Consequences**: [Trade-offs]
 
 _(Add ADRs as decisions are made)_
 ```
@@ -318,7 +368,7 @@ How we know the MVP is working:
 ## Constraints & Requirements
 
 **Technical constraints:**
-- [e.g. Must run on Cloudflare free tier]
+- [e.g. Must run on free tier]
 - [e.g. Must work offline]
 
 **Non-functional requirements:**
@@ -336,28 +386,37 @@ How we know the MVP is working:
 
 ### TASKS.md
 
-**Scope**: Milestone status dashboard only. No task details here. Those live in `./tasks/MilestoneX.X.md`. This file stays short permanently.
+**Scope**: Milestone status dashboard only. No task details here. Those live in `./tasks/Milestone[VERSION].md`. This file stays short permanently.
 
 ```markdown
 # TASKS.md: [Project Name] Milestone Tracker
 
-## Status
+**Last Updated**: [date]
+**Current Version**: [version]
 
-### Completed Milestones
-| Status | Milestone | Completed | Tasks | Description |
+---
+
+## Completed Milestones
+
+| Milestone | Status | Date Completed | Tasks | Description |
 |---|---|---|---|---|
 | _(none yet)_ | | | | |
 
-### Active Milestones
-| Status | Milestone | Priority | Description |
-|---|---|---|---|
-| 🚧 | [Milestone 0: Project Setup](./tasks/Milestone0.md) | SETUP | Initialize project, create branches, verify dev environment |
+---
 
-### Planned Milestones
-| Status | Milestone | Priority | Description |
+## Active / In Progress
+
+| Milestone | Status | Priority | Description |
 |---|---|---|---|
-| ⏳ | Milestone 1: [Name] | HIGH | [Brief description] |
-| ⏳ | Milestone 2: [Name] | HIGH | [Brief description] |
+| [0.0.1.0](./tasks/Milestone0.0.1.0.md) | In Progress | SETUP | Project setup and scaffolding |
+
+---
+
+## Pending
+
+| Milestone | Status | Priority | Description |
+|---|---|---|---|
+| _(plan milestones as needed)_ | | | |
 
 ---
 
@@ -366,15 +425,17 @@ _Milestone details, task lists, and session notes live in `./tasks/`. This file 
 
 ---
 
-### tasks/Milestone0.md
+### tasks/Milestone0.0.1.0.md
 
-Generate a filled-in Milestone 0 using the project's specific paths, developer name, and starting version. Task 0 is always project initialization:
+Generate a filled-in Milestone 0.0.1.0 using the project's specific paths, developer name, and starting version. This is the project setup milestone. Tasks should cover:
 
-- 0.1: Verify current versions from package.json
-- 0.2: Create UI feature branch
-- 0.3: Create API feature branch (if applicable)
-- 0.4: Verify local dev environment starts cleanly
-- 0.5: Confirm deployment targets are configured
+- 0.1: Initialize the application (e.g. `npm create vite@latest`, `npm init`, framework setup)
+- 0.2: Install core dependencies (framework, styling, routing, state management)
+- 0.3: Configure development environment (linting, TypeScript config, environment variables)
+- 0.4: Create feature branch
+- 0.5: Verify local dev environment starts cleanly
+
+Tailor the tasks to the specific tech stack. A React + Vite project has different setup steps than a Node + Express API.
 
 ### tasks/MilestoneTemplate.md
 
@@ -390,9 +451,9 @@ Create `[project]/screenshots/` as an empty directory. Bug fix files reference s
 
 ---
 
-## Step 5: Report
+## Step 6: Report
 
-After all files are created:
+After all files are created, report what was generated and what to do next:
 
 ```
 Project: [name]
@@ -402,13 +463,13 @@ Files created in [folder]:
   ✓ ARCHITECTURE.md
   ✓ PRD.md
   ✓ TASKS.md
-  ✓ tasks/Milestone0.md
+  ✓ tasks/Milestone0.0.1.0.md
   ✓ tasks/MilestoneTemplate.md
   ✓ bugs/BugFixTemplate.md
   ✓ screenshots/ (empty)
 
 Starting version: [version]
-First branch (when ready): [developer]-[MMDDYY]-0.0.1.0-[ui suffix]
+First branch (when ready): [developer]-[MMDDYY]-0.0.1.0-[suffix]
 
 Next steps:
 1. Review ARCHITECTURE.md and verify it reflects your actual repo structure
@@ -418,9 +479,9 @@ Next steps:
    - The templates assume a UI + API pair, but adapt them to your structure.
 2. Review and fill in the placeholder sections in PRD.md
 3. Run /session-start [folder(s)] to initialize your session
-4. Begin Milestone 0, Task 0.1: verify versions and create branches
+4. Begin Milestone 0.0.1.0, Task 0.1: initialize the application
 ```
 
-Do NOT create branches. That is Task 0 and requires explicit user review of the generated files first.
+Do NOT create branches. That is a Task 0 step and requires explicit user review of the generated files first.
 
 **Important**: The generated templates assume a common two-repo pattern (UI + API), but your project may differ. Review MilestoneTemplate.md and adjust the Task 0 steps, branch naming, and version tracking sections to match your actual repository structure before starting your first milestone.
