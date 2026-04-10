@@ -25,7 +25,7 @@
 
 | Milestone | Status | Priority | Description |
 |---|---|---|---|
-| _(plan milestones as needed)_ | | | |
+| [0.0.2.0](./tasks/Milestone0.0.2.0.md) | Planning | HIGH | Database schema, migrations, and types |
 
 ---
 
