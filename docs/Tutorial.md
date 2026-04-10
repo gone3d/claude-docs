@@ -4,21 +4,29 @@
 
 ---
 
+## Try It Yourself
+
+This repo includes a ready-to-go starting point. Copy the `tutorials/blank-project/` folder to your GitHub root and follow the steps below:
+
+```bash
+cp -r claude-docs/tutorials/blank-project/* ~/Projects/GitHub/
+cd ~/Projects/GitHub
+claude
+```
+
+The `blank-project/` folder contains `tutorial-ui/` and `tutorial-api/`, each with just a README.md pre-loaded with project context (tech stack, API endpoints, database schema, TypeScript types). This gives `/project-new` everything it needs to generate accurate files.
+
+After you complete the tutorial, compare your results to `tutorials/new-project/` to see what the finished scaffolding looks like.
+
 ## Prerequisites
 
 - Claude Code installed and authenticated
 - Skills installed to `~/.claude/commands/` (see [INSTALL.md](../INSTALL.md))
-- Two new repos created in your GitHub root directory:
-  - `tutorial-ui/` (frontend, contains only .gitignore and README.md)
-  - `tutorial-api/` (backend, contains only .gitignore and README.md)
-- Each repo should have a `package.json` with `"version": "0.0.0.0"`. If not, create one:
+- Two folders in your working directory, each with a README.md:
+  - `tutorial-ui/` (frontend)
+  - `tutorial-api/` (backend)
 
-```bash
-cd tutorial-ui && npm init -y && cd ..
-cd tutorial-api && npm init -y && cd ..
-```
-
-Then set the version in each `package.json` to `"0.0.0.0"`.
+Use the `tutorials/blank-project/` folder as your starting point, or create your own.
 
 ---
 
@@ -81,7 +89,22 @@ tutorial-ui/
 
 ---
 
-## Step 3: Scaffold the API project
+## Step 3: Prepare the API repo with context
+
+Before running `/project-new` on the API, add useful context to its README.md. The more detail you provide up front, the better the generated files will be. Good things to include:
+
+- **Database schema** (tables, columns, types, constraints, indexes)
+- **API endpoints** (routes, methods, request/response formats)
+- **Seed data** (test data for development)
+- **Query parameters** (filtering, sorting, pagination)
+
+The `/project-new` skill reads existing files in the repo. A README with a database schema and endpoint list gives Claude real context to work with when generating ARCHITECTURE.md and the first milestone.
+
+This applies to any repo, not just APIs. Put your existing project management docs, architecture notes, wireframes descriptions, or database schemas in the README before scaffolding. It saves you from having to fix everything after the fact.
+
+---
+
+## Step 4: Scaffold the API project
 
 Run `/project-new` again for the API repo. The API is a standalone service, so the answers are different:
 
@@ -111,7 +134,7 @@ Claude generates the same file structure in `tutorial-api/`. Since this is an AP
 
 ---
 
-## Step 4: Initialize a session
+## Step 5: Initialize a session
 
 Now that both projects are scaffolded, start a session:
 
@@ -132,9 +155,29 @@ Blockers:         None
 Key Rules:        Do not commit. Branch creation only.
 ```
 
+### How sessions work across repos
+
+Passing both repos to `/session-start` registers them for the entire session. You don't need to re-run it when switching between repos. All skills know about both folders:
+
+```
+/milestone-status                  <- checks tutorial-ui (primary)
+/milestone-status tutorial-api     <- checks tutorial-api
+/task-complete 1                   <- updates tutorial-ui
+/task-complete tutorial-api 1      <- updates tutorial-api
+```
+
+You only need to re-run `/session-start` when:
+- You open a new terminal
+- You switch to a completely different project
+- You start a new day (sessions older than 24 hours get a staleness warning)
+
+**Working with one repo at a time is fine.** If you're spending a whole session on the API, the skills still work. You just pass the folder name when it's not the primary repo. The session context is there for both.
+
+**What about 3+ repos?** The session supports two registered repos (primary + API). For additional repos (an AI service, a worker, etc.), use `--add-dir ../my-third-repo` to give Claude access without registering it in the session. Most projects don't need more than two.
+
 ---
 
-## Step 5: Check milestone status
+## Step 6: Check milestone status
 
 ```
 /milestone-status
@@ -144,7 +187,7 @@ This shows the progress table for the active milestone. You should see Task 0 (M
 
 ---
 
-## Step 6: Run Task 0 (Initialization)
+## Step 7: Run Task 0 (Initialization)
 
 Task 0 is always the same: verify the current version and create the feature branch. Tell Claude to proceed:
 
@@ -164,7 +207,7 @@ Repeat for tutorial-api if it has its own Milestone 0.0.1.0.
 
 ---
 
-## Step 7: Mark Task 0 complete
+## Step 8: Mark Task 0 complete
 
 ```
 /task-complete 0
@@ -174,7 +217,7 @@ This updates the milestone's progress table, marks Task 0 as complete, and bumps
 
 ---
 
-## Step 8: Work through tasks
+## Step 9: Work through tasks
 
 For each remaining task in the milestone:
 
@@ -186,7 +229,7 @@ For each remaining task in the milestone:
 
 ---
 
-## Step 9: Create the next milestone
+## Step 10: Create the next milestone
 
 When all tasks are complete:
 
@@ -198,7 +241,7 @@ Claude reads `package.json` (now at 0.0.1.N), bumps PATCH +1 to 0.0.2.0, and cre
 
 ---
 
-## Step 10: Track bug fixes
+## Step 11: Track bug fixes
 
 If you find a bug during development, use `/bugfix-status` to check existing bugs:
 
@@ -216,7 +259,32 @@ Bug fixes follow the same review-and-commit workflow. When resolved, update the 
 
 ---
 
-## Workflow Summary
+## Your Daily Workflow
+
+Once the project is set up, this is what every working session looks like. The setup (Steps 1-3) is a one-time cost. The daily workflow is three commands:
+
+```bash
+cd ~/Projects/GitHub
+claude
+```
+
+```
+/session-start tutorial-ui tutorial-api
+/milestone-status
+```
+
+That's it. You're oriented. Claude knows your projects, your current milestone, and what task is next. From here, just work:
+
+- Tell Claude what to build
+- Review the code in GitHub Desktop
+- Commit when you're happy
+- Run `/task-complete N` to bump the version
+
+If you're only working on one repo today, that's fine. The session covers both, but you can focus on just the API or just the UI. The context is there when you need it.
+
+---
+
+## Command Reference
 
 ```
 /project-new [folder]           <- scaffold project files (once per repo)
@@ -231,9 +299,10 @@ Bug fixes follow the same review-and-commit workflow. When resolved, update the 
 
 ## Tips
 
-- **Always start with `/session-start`.** Every new terminal session needs it. Takes seconds, prevents Claude from guessing.
+- **The daily start is simple.** Three commands, ten seconds, and you're working. The setup is the hard part. The daily workflow is easy.
 - **Review generated files.** The skills create good scaffolding, but your project is unique. Adjust ARCHITECTURE.md and PRD.md before starting real work.
 - **Adapt the templates.** The MilestoneTemplate.md in each repo should match that repo's structure. A single-repo API doesn't need UI branch steps.
 - **Keep CLAUDE.md lean.** Session history belongs in milestone files, not in CLAUDE.md. One line per completed milestone.
 - **Commit after every `/task-complete`.** The skill bumps `package.json` but doesn't commit. You review and commit via GitHub Desktop.
+- **Work on one repo at a time.** The session registers both repos, but you don't have to touch both every session. Focus where the work is.
 - **Bug fixes are separate from milestones.** They get their own branch and tracking file. Use them for production issues, not planned feature work.

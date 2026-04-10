@@ -80,8 +80,11 @@ Working across multiple repos simultaneously (UI + API pattern), starting sessio
 ### [Milestone System](docs/milestone-system.md)
 The milestone-based task management system: file structure, version numbering (MAJOR.MINOR.PATCH.BUILD), branch naming, git workflow, and how the skills fit in.
 
-### [Tutorial](docs/Tutorial.md)
+### [Tutorial: New Project](docs/Tutorial.md)
 Step-by-step walkthrough of the full workflow. Scaffolds two repos (UI + API), creates milestones, completes tasks, and tracks bugs. Start here if you want to see everything in action.
+
+### [Tutorial: Existing App](docs/TutorialExistingApp.md)
+How to bootstrap the milestone system onto a project that already has code and history. Covers version format migration, template customization, and common scenarios (monorepos, 3-digit semver, team workflows).
 
 ---
 
