@@ -193,7 +193,7 @@ Initialize a working session. Identifies the current terminal, writes a session 
 2. Parses project folder arguments
 3. Derives a human-readable label (strips `-ui` suffix if present)
 4. Writes `.claude-sessions/[TERMINAL_ID].json`
-5. Reads `CLAUDE.md`, `TASKS.md`, `PLANNING.md`, `DECISIONS.md` from the primary project
+5. Reads `CLAUDE.md`, `TASKS.md` from the primary project
 6. Reads the most recently modified milestone file from `tasks/`
 7. Reports a structured session summary
 
@@ -203,9 +203,9 @@ Initialize a working session. Identifies the current terminal, writes a session 
 Session: hourlings (A1B2C3D4)
 Projects: hourlings-ui + hourlings-api
 ─────────────────────────────────────
-Project:          Hourlings v0.8.11.0
-Current Phase:    Milestone 24: [title]
-Last Completed:   Milestone 21.5: Zustand migration
+Project:          [name] v0.3.6.0
+Current Phase:    Milestone 0.3.6.0: [title]
+Last Completed:   Milestone 0.3.5.0: [previous milestone title]
 In Progress:      Task 1: [description]
 Blockers:         None
 Key Rules:        Do not commit. Branch creation only. User handles all git via GitHub Desktop.
@@ -250,7 +250,7 @@ Show the progress of the active milestone for this session's project. Reads the 
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `milestone-number` | string | No | Specific milestone to read (e.g. `24`, `24.1`). Omit to auto-detect from `TASKS.md`. |
+| `milestone-version` | string | No | Specific milestone version to read (e.g. `0.3.6.0`). Omit to auto-detect from `TASKS.md`. |
 
 Project directory is resolved automatically from the session file. Pass a folder name as the first argument only if you need to override the session.
 
@@ -259,25 +259,25 @@ Project directory is resolved automatically from the session file. Pass a folder
 | Invocation | Behavior |
 |---|---|
 | `/milestone-status` | Auto-detect active milestone using session project |
-| `/milestone-status 24` | Read `tasks/Milestone24.md` in session project |
-| `/milestone-status hourlings-ui` | Override project folder, auto-detect milestone |
-| `/milestone-status hourlings-ui 24` | Override project folder, specific milestone |
+| `/milestone-status 0.3.6.0` | Read `tasks/Milestone0.3.6.0.md` in session project |
+| `/milestone-status my-app-ui` | Override project folder, auto-detect milestone |
+| `/milestone-status my-app-ui 0.3.6.0` | Override project folder, specific milestone |
 
 #### Output
 
 ```
-Session: hourlings (A1B2C3D4), hourlings-ui
+Session: [label] ([TERMINAL_ID 8 chars]), [BASE_DIR]
 ────────────────────────────────────────────
-Milestone 24: [Title]
-Version: 0.8.11.0 → 0.8.12.0
+Milestone 0.3.6.0: [Title]
+Version: 0.3.5.2 -> 0.3.6.0
 Progress: 2 of 6 tasks complete (33%)
 
 | Task                        | Priority | Status      | Version    |
 |-----------------------------|----------|-------------|------------|
-| Task 0: Initialization      | SETUP    | ✅ Complete | 0.8.12.0   |
-| Task 1: [Name]              | HIGH     | ✅ Complete | 0.8.12.1   |
-| Task 2: [Name]              | HIGH     | ⏳ Pending  | 0.8.12.2   |
-| Task 3: [Name]              | MEDIUM   | ⏳ Pending  | 0.8.12.3   |
+| Task 0: Initialization      | SETUP    | Complete    | 0.3.6.0    |
+| Task 1: [Name]              | HIGH     | Complete    | 0.3.6.1    |
+| Task 2: [Name]              | HIGH     | Pending     | 0.3.6.2    |
+| Task 3: [Name]              | MEDIUM   | Pending     | 0.3.6.3    |
 
 Next: Task 2: [Name] (HIGH)
 [One-line description]
@@ -301,17 +301,17 @@ Blockers: None
 /milestone-status
 
 # Check a specific milestone
-/milestone-status 24
+/milestone-status 0.3.6.0
 
 # Override project (ignores session)
-/milestone-status hourlings-ui 24
+/milestone-status my-app-ui 0.3.6.0
 ```
 
 ---
 
 ### /milestone-new
 
-Scaffold a new milestone file from `MilestoneTemplate.md`. Reads current version numbers from both repos automatically and calculates target versions.
+Scaffold a new milestone file from `MilestoneTemplate.md`. Reads `package.json` to auto-calculate the next version, names the file accordingly.
 
 **Source file**: `skills/milestone-new.md`
 
@@ -327,40 +327,35 @@ Scaffold a new milestone file from `MilestoneTemplate.md`. Reads current version
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `milestone-number` | string | **Yes** | The new milestone identifier. Will prompt if missing. |
+| (none) | | | Version is auto-calculated from package.json. No arguments needed with an active session. |
 
-Project directories (both UI and API) are resolved from the session file, enabling automatic version calculation across both repos.
+Project directories are resolved from the session file, enabling automatic version calculation.
+
+#### How It Works
+
+1. Reads `package.json` to get current version (e.g. `0.3.5.2`)
+2. Bumps PATCH by 1, resets BUILD to 0: `0.3.6.0`
+3. Creates `tasks/Milestone0.3.6.0.md` from the template
+4. Fills in version numbers and branch names automatically
 
 #### Argument Patterns
 
 | Invocation | Behavior |
 |---|---|
-| `/milestone-new 25` | Create `tasks/Milestone25.md` using session projects |
-| `/milestone-new 25.1` | Create `tasks/Milestone25.1.md` |
-| `/milestone-new hourlings-ui 25` | Override project folder |
-
-#### Version Calculation
-
-| Repo | Example Current | Milestone Start |
-|---|---|---|
-| UI | `0.8.11.3` | `0.8.12.0`: PATCH +1, BUILD reset to 0 |
-| API | `0.8.11.2` | `0.8.11.2`: unchanged until API tasks begin |
-
-Each completed task during the milestone increments BUILD by 1.
+| `/milestone-new` | Auto-calculate version from session project's package.json |
+| `/milestone-new my-app-ui` | Override project folder |
 
 #### Output
 
 ```
-Session: hourlings (A1B2C3D4)
+Session: [label] ([TERMINAL_ID 8 chars])
 ────────────────────────────────────────
-Created: hourlings-ui/tasks/Milestone25.md
+Created: [project]/tasks/Milestone0.3.6.0.md
 
-UI:  0.8.11.3 → 0.8.12.0  (hourlings-ui)
-API: 0.8.11.2 unchanged    (hourlings-api)
+Version: 0.3.5.2 -> 0.3.6.0  ([project])
 
-Branch names for Task 0:
-  UI:  don-040826-milestone-25-ui
-  API: don-040826-milestone-25-api
+Branch name for Task 0:
+  don-041026-0.3.6.0-[suffix]
 
 Next: Open the file, fill in objective, scope, and tasks, then run /session-start.
 ```
@@ -368,12 +363,11 @@ Next: Open the file, fill in objective, scope, and tasks, then run /session-star
 #### Examples
 
 ```
-# With active session, just the milestone number
-/milestone-new 25
-/milestone-new 25.1
+# With active session, version auto-calculated
+/milestone-new
 
 # Override project
-/milestone-new hourlings-ui 25
+/milestone-new my-app-ui
 ```
 
 #### Notes
@@ -435,7 +429,7 @@ Session: hourlings (A1B2C3D4)
    ⏳ Pending → ✅ Complete
 
 Progress: 2 of 6 tasks complete (33%)
-Version:  0.8.12.0 → 0.8.12.1  (package.json updated, commit via GitHub Desktop)
+Version:  0.3.6.0 -> 0.3.6.1  (package.json updated, commit via GitHub Desktop)
 
 Next: Task 2: [Name] (HIGH)
 ```

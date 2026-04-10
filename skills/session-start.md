@@ -64,7 +64,6 @@ Read the following files from the primary/UI project folder (skip any that don't
 - `[ui-folder]/CLAUDE.md`
 - `[ui-folder]/TASKS.md`
 - `[ui-folder]/PLANNING.md`
-- `[ui-folder]/DECISIONS.md`
 
 Also read the most recently modified file in `[ui-folder]/tasks/` for task-level detail.
 

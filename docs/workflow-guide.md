@@ -94,7 +94,7 @@ No context-switching, no copy-pasting. Claude reads both files directly.
 Database migrations often require coordinated changes: a new column in the API schema, a new field in the frontend form, updated types on both sides. From the GitHub root with an active session:
 
 ```
-Run Milestone 5, Task 2. Adds the word_count column. 
+Run the current milestone, Task 2. Adds the word_count column. 
 This requires changes to the migration file, the API response, 
 and the frontend type definitions.
 ```
@@ -125,11 +125,11 @@ Useful when you need to reference a third repo for patterns without making it pa
 The milestone system uses paired branches, one per repo, named to match:
 
 ```
-don-040826-milestone-5-ui    # hourlings-ui
-don-040826-milestone-5-api   # hourlings-api
+don-041026-0.3.6.0-ui    # UI repo
+don-041026-0.3.6.0-api   # API repo
 ```
 
-Both branches are created in Task 0 of each milestone. Claude creates the branches (the one git operation it's allowed to do), but you handle all commits and merges via GitHub Desktop or your preferred git tool.
+The branch name includes the milestone version so it's immediately clear what work is on that branch. Both branches are created in Task 0 of each milestone. Claude creates the branches (the one git operation it's allowed to do), but you handle all commits and merges via GitHub Desktop or your preferred git tool.
 
 **Why Claude doesn't commit:** You want to review every change before it goes into the repo. GitHub Desktop gives you a visual diff before each commit. Claude prepares the code, you verify it.
 
