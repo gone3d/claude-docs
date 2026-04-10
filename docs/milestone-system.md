@@ -20,11 +20,13 @@ your-project/
 ├── ARCHITECTURE.md              # Technical reference: patterns, ADRs
 ├── PRD.md                       # Product requirements: vision, goals, MVP
 ├── TASKS.md                     # Milestone dashboard: links only, no detail
-└── tasks/
-    ├── MilestoneTemplate.md     # Template for new milestones
-    ├── Milestone0.md            # Project initialization
-    ├── Milestone1.md            # First feature milestone
-    └── Milestone1.1.md          # Sub-milestone (if a milestone gets large)
+├── tasks/
+│   ├── MilestoneTemplate.md     # Template for new milestones
+│   ├── Milestone0.0.1.0.md      # Project initialization
+│   └── Milestone0.0.2.0.md      # First feature milestone
+├── bugs/
+│   └── BugFixTemplate.md        # Template for bug fix tracking
+└── screenshots/                 # Bug fix screenshots
 ```
 
 **The rule**: All implementation detail, session notes, and task-level decisions belong in milestone files. Root-level docs (`CLAUDE.md`, `ARCHITECTURE.md`, `PRD.md`) stay lean and reference-sized. They don't grow with every session.
@@ -35,37 +37,64 @@ your-project/
 
 ```
 MAJOR . MINOR . PATCH . BUILD
-  0   .   8   .  12   .   3
+  0   .   3   .   5   .   2
 ```
 
 | Digit | When it changes | Example |
 |---|---|---|
-| **BUILD** | Each task completion | `0.8.12.0` → `0.8.12.1` → `0.8.12.2` |
-| **PATCH** | New milestone starts | `0.8.12.N` → `0.8.13.0` |
-| **MINOR** | Major feature or significant enhancement | `0.8.x.x` → `0.9.0.0` |
-| **MAJOR** | Breaking changes, major releases | `0.x.x.x` → `1.0.0.0` |
+| **BUILD** | Each task completion within a milestone | 0.3.5.0 -> 0.3.5.1 -> 0.3.5.2 |
+| **PATCH** | New milestone starts (BUILD resets to 0) | 0.3.5.N -> 0.3.6.0 |
+| **MINOR** | Major feature or significant enhancement | 0.3.N.N -> 0.4.0.0 |
+| **MAJOR** | Breaking changes, production release | 0.N.N.N -> 1.0.0.0 |
 
-**Why BUILD-level versioning?** Each task completion gets its own version, which means each task can be independently deployed for browser testing. You can verify one task works before starting the next.
+**Why BUILD-level versioning?** Each task completion gets its own version, which means each task can be independently deployed for testing. You can verify one task works before starting the next.
 
-**Version conventions:**
-- `v0.x.x.x`: development phase (can go to `v0.8.100.0` if needed, that's fine)
-- `v0.9.x.x`: beta / MVP release
-- `v1.0.x.x`: production release
+**Development phases:**
+
+| Range | Phase | Notes |
+|---|---|---|
+| 0.0.x.x | Project setup and early development | First milestone is always 0.0.1.0 |
+| 0.1.x.x through 0.8.x.x | Active development, pre-MVP | Bump MINOR for significant features. Stay here as long as needed. |
+| 0.9.x.x | Beta / MVP testing | Viable product in production with real users |
+| 1.0.x.x | Production release | First stable public release |
+
+The MINOR digit can go as high as needed. 0.8.50.0 or 0.8.100.0 is fine. Don't rush to 0.9 until the product is genuinely ready for beta testing.
+
+---
+
+## Milestone Naming
+
+**Milestones are named after the version they produce.** The milestone name IS the starting version number.
+
+To determine the next milestone:
+
+1. Read `package.json` for the current version (e.g. `0.3.5.2`)
+2. Bump PATCH by 1, reset BUILD to 0: `0.3.6.0`
+3. File name: `Milestone0.3.6.0.md`
+4. Each task bumps BUILD: 0.3.6.1, 0.3.6.2, etc.
+
+**Examples:**
+
+| Current Version | Next Milestone | File | Task 1 | Task 2 |
+|---|---|---|---|---|
+| 0.0.0.0 (new) | 0.0.1.0 | Milestone0.0.1.0.md | 0.0.1.1 | 0.0.1.2 |
+| 0.0.2.3 | 0.0.3.0 | Milestone0.0.3.0.md | 0.0.3.1 | 0.0.3.2 |
+| 0.3.12.5 | 0.3.13.0 | Milestone0.3.13.0.md | 0.3.13.1 | 0.3.13.2 |
 
 ---
 
 ## Milestone File Structure
 
-Every milestone file follows the same template. Key sections:
+Every milestone file follows the template. Key sections:
 
 ### Header
 ```markdown
-# Milestone 5.1: [Title]
+# Milestone 0.3.6.0 - [Title]
 
-**Status**: 🚧 In Progress
-**Date Created**: 2026-04-08
-**Date Started**: 2026-04-08
-**Version**: 0.8.13.0 (starting)
+**Version**: 0.3.6.0
+**Status**: In Progress
+**Date Created**: 2026-04-10
+**Date Started**: 2026-04-10
 ```
 
 ### Progress Summary Table
@@ -78,22 +107,22 @@ The first thing you see, current completion at a glance:
 
 | Task                        | Priority | Status      | Version   | Deployed |
 |-----------------------------|----------|-------------|-----------|----------|
-| Task 0: Initialization      | SETUP    | ✅ Complete | 0.8.13.0  | -        |
-| Task 1: [Name]              | HIGH     | ✅ Complete | 0.8.13.1  | ✅       |
-| Task 2: [Name]              | HIGH     | 🚧 In Progress | 0.8.13.2 | -      |
-| Task 3: [Name]              | MEDIUM   | ⏳ Pending  | 0.8.13.3  | -        |
-| Task 4: [Name]              | LOW      | ⏳ Pending  | 0.8.13.4  | -        |
+| Task 0: Initialization      | SETUP    | Complete    | 0.3.6.0   | -        |
+| Task 1: [Name]              | HIGH     | Complete    | 0.3.6.1   | Yes      |
+| Task 2: [Name]              | HIGH     | In Progress | 0.3.6.2   | -        |
+| Task 3: [Name]              | MEDIUM   | Pending     | 0.3.6.3   | -        |
+| Task 4: [Name]              | LOW      | Pending     | 0.3.6.4   | -        |
 ```
 
 ### Task 0: Milestone Initialization (Always First)
 
 Task 0 is the setup task every milestone starts with. It ensures version numbers are accurate (milestones are often planned before they're started, so versions change between planning and execution):
 
-- **0.1**: Read `package.json` to get current UI version
-- **0.2**: Read API `package.json` if applicable
-- **0.3**: Create UI feature branch
-- **0.4**: Create API feature branch (if needed)
-- **0.5**: Update milestone header with confirmed versions
+- **0.1**: Read `package.json` to get current version
+- **0.2**: Create feature branch
+- **0.3**: Update milestone header with confirmed versions
+
+For multi-repo projects, add steps for each additional repo (read version, create branch).
 
 **Claude creates the branches. You commit everything else.**
 
@@ -105,21 +134,19 @@ Each task has:
 - Implementation steps
 - Testing checklist
 - Success criteria
-- Rollback plan (for risky changes)
 
 ---
 
 ## Branch Naming
 
 ```
-[developer]-[MMDDYY]-milestone-[number]-[ui|api]
+[developer]-[MMDDYY]-[VERSION]-[repo-suffix]
 ```
 
 Examples:
 ```
-don-040826-milestone-5-ui
-don-040826-milestone-5-api
-don-040826-milestone-5.1-ui    # sub-milestone
+don-041026-0.3.6.0-ui
+don-041026-0.3.6.0-api
 ```
 
 Branches are created from `main`, pushed immediately, and all work for that milestone happens on that branch.
@@ -128,19 +155,22 @@ Branches are created from `main`, pushed immediately, and all work for that mile
 
 ## The Skills
 
-The milestone system is supported by four slash commands:
+The milestone system is supported by slash commands:
 
-### `/session-start [ui-folder] [api-folder]`
-Run at the start of every terminal session. Reads `CLAUDE.md`, `TASKS.md`, and the active milestone file, then gives you a current-state briefing. Writes a session context file so other skills know which projects you're working on.
+### `/session-start [folder(s)]`
+Run at the start of every terminal session. Reads `CLAUDE.md`, `TASKS.md`, and the active milestone file, then gives you a current-state briefing.
 
-### `/milestone-status [number]`
-Shows the active milestone's progress table, next task, and blockers. Pass a number to check a specific milestone instead of the active one.
+### `/milestone-status [version]`
+Shows the active milestone's progress table, next task, and blockers.
 
-### `/milestone-new [number]`
-Scaffolds a new milestone file from the template. Reads both repos' `package.json` files to calculate starting versions automatically. Fills in branch names with today's date.
+### `/milestone-new`
+Scaffolds a new milestone file from the template. Reads `package.json` to calculate the next version automatically. Names the file accordingly.
 
 ### `/task-complete [number]`
 Marks a task complete, updates the progress table, bumps `package.json` version to match. Does not commit anything. You review and commit via GitHub Desktop.
+
+### `/bugfix-status`
+Shows open bug fixes from the `bugs/` directory.
 
 ---
 
@@ -167,25 +197,25 @@ This separation keeps you in control of what goes into the repo. Claude prepares
 
 ```
 Planning
-  /milestone-new 5          ← scaffold the file
-  [fill in tasks manually]  ← you define what needs to be done
+  /milestone-new               <- scaffold the file (version auto-calculated)
+  [fill in tasks manually]     <- you define what needs to be done
 
 Starting
   /session-start my-app-ui my-app-api
-  /milestone-status          ← confirm Task 0 is next
+  /milestone-status            <- confirm Task 0 is next
   [review Task 0 steps]
-  [approve branch creation]  ← Claude creates branches with your OK
+  [approve branch creation]    <- Claude creates branches with your OK
 
 Development
   [Claude implements tasks]
-  /task-complete 1           ← marks done, bumps version
+  /task-complete 1             <- marks done, bumps version
   [you commit via GitHub Desktop]
   /task-complete 2
   [you commit]
   ...
 
 Completion
-  /task-complete [last]      ← all tasks done
+  /task-complete [last]        <- all tasks done
   [update TASKS.md: move milestone to Completed table]
   [update CLAUDE.md: update current status]
   [you merge PR, deploy]
@@ -193,15 +223,17 @@ Completion
 
 ---
 
-## When to Create a Sub-Milestone
+## When to Split a Milestone
 
-If a milestone grows beyond 7–8 tasks, split it:
+If a milestone grows beyond 7-8 tasks, split it. Each part gets its own version:
 
 ```
-Milestone 7     → becomes →    Milestone 7.1 + Milestone 7.2
+Current version: 0.3.5.0
+Part 1: Milestone0.3.6.0.md (tasks 1-4)
+Part 2: Milestone0.3.7.0.md (tasks 5-8)
 ```
 
-Each sub-milestone gets its own branch, its own version sequence, and its own file. This keeps individual milestones deployable in a reasonable timeframe.
+Each gets its own branch, version sequence, and file. This keeps milestones deployable in a reasonable timeframe.
 
 ---
 

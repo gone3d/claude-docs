@@ -25,7 +25,7 @@ $ARGUMENTS may contain an optional milestone number:
 | Invocation | Behavior |
 |---|---|
 | `/milestone-status` | Auto-detect active milestone from session's BASE_DIR |
-| `/milestone-status 24` | Read `BASE_DIR/tasks/Milestone24.md` specifically |
+| `/milestone-status 0.3.6.0` | Read `BASE_DIR/tasks/Milestone0.3.6.0.md` specifically |
 | `/milestone-status hourlings-ui` | Override BASE_DIR (ignores session file) |
 | `/milestone-status hourlings-ui 24` | Override BASE_DIR + specific milestone |
 

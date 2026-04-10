@@ -110,8 +110,8 @@ _(none yet)_
 - Developer handles all commits and merges via [GitHub Desktop / CLI / preference]
 
 **Branch Naming:**
-- `[developer]-MMDDYY-milestone-[number]-[ui|api]`
-- Example: `don-040826-milestone-1-ui`
+- `[developer]-MMDDYY-[VERSION]-[ui|api]`
+- Example: `don-041026-0.0.1.0-ui`
 
 **Version Bumping:**
 - Each task completion: BUILD +1 (e.g. `0.1.0.0` → `0.1.0.1`)
@@ -408,7 +408,7 @@ Files created in [folder]:
   ✓ screenshots/ (empty)
 
 Starting version: [version]
-First branch (when ready): [developer]-[MMDDYY]-milestone-0-[ui suffix]
+First branch (when ready): [developer]-[MMDDYY]-0.0.1.0-[ui suffix]
 
 Next steps:
 1. Review ARCHITECTURE.md and verify it reflects your actual repo structure

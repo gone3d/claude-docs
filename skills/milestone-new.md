@@ -20,15 +20,14 @@ If no session file, fall back to $ARGUMENTS for a project folder. If neither, pr
 
 ## Step 2: Parse Arguments
 
-$ARGUMENTS must contain a milestone number. It may optionally contain a project folder override:
+$ARGUMENTS is optional. The version is auto-calculated from package.json. A project folder override may be provided:
 
 | Invocation | Behavior |
 |---|---|
-| `/milestone-new 25` | Use session BASE_DIR, milestone = 25 |
-| `/milestone-new 25.1` | Use session BASE_DIR, milestone = 25.1 |
-| `/milestone-new hourlings-ui 25` | Override BASE_DIR, milestone = 25 |
+| `/milestone-new` | Use session BASE_DIR, auto-calculate version from package.json |
+| `/milestone-new my-app-ui` | Override BASE_DIR, auto-calculate version |
 
-If no milestone number is found in $ARGUMENTS, prompt: "Which milestone number? (e.g. `/milestone-new 25`)"
+The milestone version is always derived from package.json (PATCH +1, BUILD reset to 0). It is not provided as an argument.
 
 ---
 
@@ -44,10 +43,11 @@ cat [BASE_DIR]/package.json | grep '"version"'
 cat [API_DIR]/package.json | grep '"version"'
 ```
 
-Calculate the milestone starting version for the UI:
-- Take current version (e.g. `0.8.11.3`)
-- Increment PATCH by 1, reset BUILD to 0 → `0.8.12.0`
+Calculate the milestone starting version:
+- Take current version (e.g. `0.3.5.2`)
+- Increment PATCH by 1, reset BUILD to 0: `0.3.6.0`
 - This is the version assigned to Task 0
+- The milestone file is named `Milestone0.3.6.0.md`
 
 The API version stays at its current value unless API tasks are planned.
 
@@ -56,14 +56,13 @@ The API version stays at its current value unless API tasks are planned.
 ## Step 4: Create the Milestone File
 
 1. Read `BASE_DIR/tasks/MilestoneTemplate.md`
-2. If `BASE_DIR/tasks/Milestone[number].md` already exists, warn before overwriting
-3. Create `BASE_DIR/tasks/Milestone[number].md` filling in:
-   - Milestone number in the title and throughout
+2. If `BASE_DIR/tasks/Milestone[VERSION].md` already exists, warn before overwriting
+3. Create `BASE_DIR/tasks/Milestone[VERSION].md` filling in:
+   - Version number in the title and throughout
    - **Date Created**: today's date
-   - **Current UI version**: from package.json
-   - **Current API version**: from package.json (or "N/A, no API changes planned")
+   - **Current version**: from package.json
    - **Starting milestone version**: calculated above
-   - **Branch names** using today's date: `don-MMDDYY-milestone-[number]-ui` and `don-MMDDYY-milestone-[number]-api`
+   - **Branch names** using today's date: `{developer}-MMDDYY-[VERSION]-[repo-suffix]`
    - Leave all task names and descriptions as template placeholders. Don't invent tasks
 
 ---
@@ -73,14 +72,12 @@ The API version stays at its current value unless API tasks are planned.
 ```
 Session: [label] ([TERMINAL_ID 8 chars])
 ────────────────────────────────────────
-Created: BASE_DIR/tasks/Milestone[number].md
+Created: BASE_DIR/tasks/Milestone[VERSION].md
 
-UI:  [current version] → [milestone start version]  ([BASE_DIR])
-API: [current version] (unchanged until API tasks begin)  ([API_DIR or "not set"])
+Version: [current] -> [milestone start]  ([BASE_DIR])
 
-Branch names for Task 0:
-  UI:  don-[MMDDYY]-milestone-[number]-ui
-  API: don-[MMDDYY]-milestone-[number]-api
+Branch name for Task 0:
+  {developer}-[MMDDYY]-[VERSION]-[suffix]
 
 Next: Open the file and fill in the objective, scope, and task list.
       Run /session-start when ready to begin.
