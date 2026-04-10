@@ -113,7 +113,7 @@ These work out of the box, no configuration needed:
 | `Ctrl+T` | Toggle task list |
 | `Ctrl+R` | Search prompt history |
 | `Esc Esc` | Rewind / summarize conversation |
-| `Shift+Tab` | Cycle through permission modes |
+| `Shift+Tab` | Cycle through permission modes (set to allow bash for smoother skill usage) |
 | `Alt+P` | Switch models |
 | `Alt+T` | Toggle extended thinking |
 | `!` prefix | Run a shell command directly (e.g. `! ls`) |

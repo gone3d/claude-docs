@@ -18,15 +18,15 @@ Tutorial API is the backend REST API for a task management application, built wi
 
 ## Current Status
 
-**Phase**: Milestone 0.0.1.0, Project Initialization
+**Phase**: Milestone 0.0.1.0 complete
 **Last Updated**: 2026-04-10
-**Version**: 0.0.0.0
+**Version**: 0.0.1.6
 
 ### Completed Milestones
-_(none yet)_
+- **Milestone 0.0.1.0**: Project setup and scaffolding (2026-04-10)
 
 ### Active Milestone
-- **Milestone 0.0.1.0**: Project setup and scaffolding
+_(none — run `/milestone-new` to create the next one)_
 
 ---
 

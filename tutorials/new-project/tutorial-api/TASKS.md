@@ -1,7 +1,7 @@
 # TASKS.md: Tutorial API Milestone Tracker
 
 **Last Updated**: 2026-04-10
-**Current Version**: 0.0.0.0
+**Current Version**: 0.0.1.6
 
 ---
 
@@ -17,7 +17,7 @@
 
 | Milestone | Status | Priority | Description |
 |---|---|---|---|
-| [0.0.1.0](./tasks/Milestone0.0.1.0.md) | In Progress | SETUP | Project setup and scaffolding |
+| [0.0.1.0](./tasks/Milestone0.0.1.0.md) | ✅ Complete | SETUP | Project setup and scaffolding |
 
 ---
 

@@ -89,15 +89,21 @@ Wait for confirmation, then begin executing the task. Read the full task section
 
 ## Step 6: After Task Completion
 
-When a task is finished, always end with a clear next action:
+When a task is finished, always end with a clear next action and ask if the user wants to continue:
 
 ```
 Task [N] complete: [task name]
 
-Next: 
+Next steps:
   1. Review changes in GitHub Desktop
   2. Commit with a meaningful message
   3. Run /task-complete [N] to update the milestone and bump the version
+
+Continue to Task [N+1]: [next task name]? (yes/no)
 ```
 
-Do NOT automatically advance to the next task. The user needs to review, commit, and explicitly advance. This is the checkpoint that keeps the developer in control.
+**If the user says yes:** Run `/task-complete [N]` to update the milestone, then immediately begin Task [N+1] following the same execution flow from Step 5.
+
+**If the user says no (or wants to pause):** End with the next steps list above. The user can come back later and run `/milestone-start` to pick up where they left off.
+
+This keeps the developer in control while making it easy to keep momentum going through multiple tasks in a single session.

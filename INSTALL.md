@@ -65,6 +65,17 @@ claude "List all available slash commands installed in ~/.claude/commands/ and d
 
 ---
 
+## Post-Install: Permissions
+
+The skills run a bash command to identify your terminal session each time they execute. Claude Code will prompt you to approve this the first time. To avoid repeated prompts:
+
+- Press `Shift+Tab` to cycle to a more permissive mode, or
+- When prompted, choose "Always allow" to persist the permission for the session
+
+This is a one-time setup. Once allowed, the skills run without interruption.
+
+---
+
 ## Post-Install: Environment Setup
 
 The skills work in both environments, but the setup experience is different.
