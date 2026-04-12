@@ -163,6 +163,9 @@ Run at the start of every terminal session. Reads `CLAUDE.md`, `TASKS.md`, and t
 ### `/milestone-status [version]`
 Shows the active milestone's progress table, next task, and blockers.
 
+### `/milestone-start [version]`
+Begins or resumes a milestone. Finds the next incomplete task, confirms with you, then executes it. After each task, asks whether to continue to the next. Picks up where you left off if the milestone is partially complete.
+
 ### `/milestone-new`
 Scaffolds a new milestone file from the template. Reads `package.json` to calculate the next version automatically. Names the file accordingly.
 
@@ -202,16 +205,15 @@ Planning
 
 Starting
   /session-start my-app-ui my-app-api
-  /milestone-status            <- confirm Task 0 is next
-  [review Task 0 steps]
+  /milestone-start             <- begins Task 0 (version check + branch creation)
   [approve branch creation]    <- Claude creates branches with your OK
 
 Development
-  [Claude implements tasks]
+  /milestone-start             <- picks up at next incomplete task
+  [Claude implements task]
+  [you review and commit via GitHub Desktop]
   /task-complete 1             <- marks done, bumps version
-  [you commit via GitHub Desktop]
-  /task-complete 2
-  [you commit]
+  [continue to next task or run /milestone-start later]
   ...
 
 Completion

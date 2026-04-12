@@ -52,6 +52,7 @@ After install, start a new Claude Code session and type `/`. You should see the 
 ```
 /bugfix-status
 /milestone-new
+/milestone-start
 /milestone-status
 /session-start
 /task-complete
@@ -144,7 +145,7 @@ claude "Copy each .md file from ./skills/ into ~/.claude/commands/, overwriting 
 To remove all skills installed from this repo:
 
 ```bash
-claude "Delete these files from ~/.claude/commands/ if they exist: session-start.md, milestone-status.md, milestone-new.md, task-complete.md, bugfix-status.md. Also delete ~/.claude/commands/internal/session-read.md and ~/.claude/commands/internal/CreateTemplates.md. Do not touch any other files. Confirm what was removed."
+claude "Delete these files from ~/.claude/commands/ if they exist: session-start.md, milestone-status.md, milestone-start.md, milestone-new.md, task-complete.md, bugfix-status.md. Also delete ~/.claude/commands/internal/session-read.md and ~/.claude/commands/internal/CreateTemplates.md. Do not touch any other files. Confirm what was removed."
 ```
 
 ---

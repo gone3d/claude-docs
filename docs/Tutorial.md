@@ -198,13 +198,13 @@ This shows the progress table for the active milestone. You should see Task 0 (M
 
 ## Step 7: Run Task 0 (Initialization)
 
-Task 0 is always the same: verify the current version and create the feature branch. Tell Claude to proceed:
+Task 0 is always the same: verify the current version and create the feature branch. Use `/milestone-start` to begin:
 
 ```
-Let's run Task 0 for Milestone 0.0.1.0 in tutorial-ui.
+/milestone-start
 ```
 
-Claude will:
+Claude will confirm which milestone and task it's about to run, then:
 1. Read `package.json` to confirm the version (0.0.0.0)
 2. Ask for approval to create the branch: `dev-041026-0.0.1.0-ui`
 3. Create and push the branch
@@ -228,9 +228,9 @@ This updates the milestone's progress table, marks Task 0 as complete, and bumps
 
 ## Step 9: Work through tasks
 
-For each remaining task in the milestone:
+Use `/milestone-start` to continue. It picks up at the next incomplete task and asks to continue after each one. Or work tasks individually:
 
-1. Tell Claude what to implement (or let the milestone file guide it)
+1. Run `/milestone-start` (or tell Claude what to implement)
 2. Claude writes the code
 3. You review in GitHub Desktop
 4. You commit
@@ -299,6 +299,7 @@ If you're only working on one repo today, that's fine. The session covers both, 
 /project-new [folder]           <- scaffold project files (once per repo)
 /session-start [ui] [api]       <- orient Claude (once per terminal session)
 /milestone-status               <- check progress
+/milestone-start [version]      <- begin or resume milestone work
 /task-complete [N]              <- mark task done, bump version
 /milestone-new                  <- scaffold next milestone (auto-versioned)
 /bugfix-status                  <- check open bugs

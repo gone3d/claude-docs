@@ -16,6 +16,7 @@
 - [Skills](#skills)
   - [/session-start](#session-start)
   - [/milestone-status](#milestone-status)
+  - [/milestone-start](#milestone-start)
   - [/milestone-new](#milestone-new)
   - [/task-complete](#task-complete)
   - [/project-new](#project-new)
@@ -306,6 +307,96 @@ Blockers: None
 # Override project (ignores session)
 /milestone-status my-app-ui 0.3.6.0
 ```
+
+---
+
+### /milestone-start
+
+Begin working on a milestone. Reads the milestone file, determines the next pending task, confirms with the user, and starts executing. If the milestone is partially complete, picks up where you left off. After each task, asks whether to continue to the next.
+
+**Source file**: `skills/milestone-start.md`
+
+---
+
+#### Syntax
+
+```
+/milestone-start [milestone-version | project-folder]
+```
+
+#### Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `milestone-version` | string | No | Specific milestone version to start or resume (e.g. `0.3.6.0`). Omit to auto-detect from `TASKS.md`. |
+
+Project directory is resolved automatically from the session file. Pass a folder name as the first argument only if you need to override the session.
+
+#### Argument Patterns
+
+| Invocation | Behavior |
+|---|---|
+| `/milestone-start` | Auto-detect active milestone using session project |
+| `/milestone-start 0.3.6.0` | Start or resume `tasks/Milestone0.3.6.0.md` |
+| `/milestone-start tutorial-api` | Override project folder, auto-detect milestone |
+| `/milestone-start tutorial-api 0.3.6.0` | Override project folder, specific milestone |
+
+#### What It Does
+
+1. Loads session context (terminal ID, project directories)
+2. Finds the active or specified milestone file
+3. Reads the Progress Summary to find the first incomplete task
+4. Shows the user what it's about to do and waits for confirmation
+5. Executes the task following the implementation steps in the milestone file
+6. After completion, asks the user whether to continue to the next task
+
+#### Task 0 Handling
+
+For Task 0 (Milestone Initialization), the skill:
+- Reads `package.json` to get the current version
+- Asks for approval before creating the branch
+- Updates the milestone header with confirmed versions
+- Reports the branch name and confirmed version
+
+#### Continuation Flow
+
+After each task completes:
+
+```
+Task [N] complete: [task name]
+
+Next steps:
+  1. Review changes in GitHub Desktop
+  2. Commit with a meaningful message
+  3. Run /task-complete [N] to update the milestone and bump the version
+
+Continue to Task [N+1]: [next task name]? (yes/no)
+```
+
+If the user says yes, the skill runs `/task-complete [N]` and immediately begins the next task. If the user says no, it ends with the next steps list. Running `/milestone-start` later picks up where you left off.
+
+#### Examples
+
+```
+# With active session, auto-detect milestone
+/milestone-start
+
+# Start a specific milestone
+/milestone-start 0.3.6.0
+
+# Override project
+/milestone-start tutorial-api
+
+# Override project and specify milestone
+/milestone-start tutorial-api 0.3.6.0
+```
+
+#### Notes
+
+- Requires an active session or explicit project folder argument.
+- If all tasks are complete, suggests running `/milestone-new` to create the next one.
+- If no milestone file is found, suggests running `/milestone-new`.
+- The continuation prompt keeps momentum going through multiple tasks in a single session without forcing it.
 
 ---
 

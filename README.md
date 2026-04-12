@@ -15,6 +15,7 @@ claude-docs/
 ├── skills/                      # Source files for ~/.claude/commands/ slash commands
 │   ├── session-start.md         # /session-start: initialize session with project context
 │   ├── milestone-status.md      # /milestone-status: active milestone progress
+│   ├── milestone-start.md       # /milestone-start: begin/resume milestone work
 │   ├── milestone-new.md         # /milestone-new: scaffold a new milestone
 │   ├── task-complete.md         # /task-complete: mark a task done, update tracker
 │   ├── bugfix-status.md          # /bugfix-status: open bug fix summary
@@ -41,6 +42,7 @@ Skills are markdown files that become `/slash-commands` inside Claude Code. They
 |---|---|
 | `/session-start` | Reads project docs and gives you a current-state briefing |
 | `/milestone-status` | Shows active milestone progress: tasks done, what's next |
+| `/milestone-start` | Begins or resumes a milestone, executing tasks in sequence |
 | `/milestone-new` | Scaffolds a new milestone file from template with correct versions |
 | `/task-complete` | Marks a task complete and updates the progress table |
 | `/project-new` | Scaffolds a complete project doc set (CLAUDE.md, ARCHITECTURE.md, PRD.md, templates) |
