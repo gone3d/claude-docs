@@ -2,7 +2,7 @@
 
 > Claude Code skills, workflow documentation, and reference guides. Built from real project experience.
 
-This repo is the source of truth for Claude Code slash commands (skills), workflow patterns, and configuration guides developed while building production applications with Claude Code in the terminal and VS Code.
+Claude Code slash commands, workflow patterns, and configuration guides developed while building production applications in the terminal and VS Code. Everything here came from solving real problems: session management across terminals, milestone tracking, multi-repo coordination, and is designed to be installed, adapted, and improved.
 
 It also serves as the reference material for the **VoodooCode** guide series.
 
@@ -38,15 +38,15 @@ claude-docs/
 
 Skills are markdown files that become `/slash-commands` inside Claude Code. They live at `~/.claude/commands/` on your machine and are available in every project.
 
-| Command | Description |
-|---|---|
-| `/session-start` | Reads project docs and gives you a current-state briefing |
-| `/milestone-status` | Shows active milestone progress: tasks done, what's next |
-| `/milestone-start` | Begins or resumes a milestone, executing tasks in sequence |
-| `/milestone-new` | Scaffolds a new milestone file from template with correct versions |
-| `/task-complete` | Marks a task complete and updates the progress table |
-| `/project-new` | Scaffolds a complete project doc set (CLAUDE.md, ARCHITECTURE.md, PRD.md, templates) |
-| `/bugfix-status` | Shows open bug fixes: count, priority, and next to work on |
+| Command             | Description                                                                          |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| `/session-start`    | Reads project docs and gives you a current-state briefing                            |
+| `/milestone-status` | Shows active milestone progress: tasks done, what's next                             |
+| `/milestone-start`  | Begins or resumes a milestone, executing tasks in sequence                           |
+| `/milestone-new`    | Scaffolds a new milestone file from template with correct versions                   |
+| `/task-complete`    | Marks a task complete and updates the progress table                                 |
+| `/project-new`      | Scaffolds a complete project doc set (CLAUDE.md, ARCHITECTURE.md, PRD.md, templates) |
+| `/bugfix-status`    | Shows open bug fixes: count, priority, and next to work on                           |
 
 See the **[Skill Reference Manual](SkillReferenceManual.md)** for full API-style documentation on each command: syntax, parameters, argument patterns, and examples.
 
@@ -74,18 +74,23 @@ Edit the source in `skills/` then re-run `./install.sh` (or copy again). The com
 ## Docs
 
 ### [Terminal Setup](docs/terminal-setup.md)
+
 Getting Claude Code terminal to feel closer to the VS Code extension: no-flicker mode, status line, font, keybindings, mouse support. Start here if you're coming from the VS Code extension.
 
 ### [Workflow Guide](docs/workflow-guide.md)
+
 Working across multiple repos simultaneously (UI + API pattern), starting sessions from a GitHub root directory, the session context system, terminal organization.
 
 ### [Milestone System](docs/milestone-system.md)
+
 The milestone-based task management system: file structure, version numbering (MAJOR.MINOR.PATCH.BUILD), branch naming, git workflow, and how the skills fit in.
 
 ### [Tutorial: New Project](docs/Tutorial.md)
+
 Step-by-step walkthrough of the full workflow. Scaffolds two repos (UI + API), creates milestones, completes tasks, and tracks bugs. Start here if you want to see everything in action.
 
 ### [Tutorial: Existing App](docs/TutorialExistingApp.md)
+
 How to bootstrap the milestone system onto a project that already has code and history. Covers version format migration, template customization, and common scenarios (monorepos, 3-digit semver, team workflows).
 
 ---
@@ -121,4 +126,4 @@ your-project/
 
 ---
 
-*Built with Claude Code. Documented so you don't have to figure it out from scratch.*
+_Built with Claude Code. Documented so you don't have to figure it out from scratch._
