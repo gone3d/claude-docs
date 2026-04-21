@@ -19,8 +19,12 @@
   - [/milestone-start](#milestone-start)
   - [/milestone-new](#milestone-new)
   - [/task-complete](#task-complete)
+  - [/milestone-complete](#milestone-complete)
   - [/project-new](#project-new)
-  - [/bugfix-status](#bugfix-status)
+  - [/session-help](#session-help)
+  - [/bug-status](#bug-status)
+  - [/bug-add](#bug-add)
+  - [/bug-fixed](#bug-fixed)
 - [Internal Helpers](#internal-helpers)
   - [/internal:session-read](#internalsession-read)
   - [/internal:CreateTemplates](#internalcreatetemplates)
@@ -544,6 +548,61 @@ Next: Task 2: [Name] (HIGH)
 
 ---
 
+### /milestone-complete
+
+Close out a finished milestone. Verifies all tasks are complete, updates the milestone file, TASKS.md, and CLAUDE.md, optionally archives to `tasks/reference/`, then shows session help.
+
+**Source file**: `skills/milestone-complete.md`
+
+---
+
+#### Syntax
+
+```
+/milestone-complete [version | project-folder]
+```
+
+#### Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `version` | string | No | Milestone version to complete (auto-detects if omitted) |
+| `project-folder` | string | No | Override BASE_DIR from session |
+
+#### Argument Patterns
+
+| Invocation | Behavior |
+|---|---|
+| `/milestone-complete` | Complete the active "In Progress" milestone |
+| `/milestone-complete 0.3.6.0` | Complete Milestone 0.3.6.0 specifically |
+| `/milestone-complete hourlings-ui` | Override BASE_DIR, auto-detect milestone |
+
+#### Output
+
+```
+Session: [label] ([TERMINAL_ID 8 chars])
+────────────────────────────────────────
+Milestone complete: 0.3.6.0 - Feature Name
+  5 tasks | Completed 2026-04-21
+  Version: 0.3.6.5
+
+Updated:
+  ✓ Milestone file status set to Complete
+  ✓ TASKS.md milestone moved to completed
+  ✓ CLAUDE.md current status updated
+
+[session-help output follows]
+```
+
+#### Notes
+
+- Refuses to complete a milestone with pending or in-progress tasks. Lists the incomplete tasks so you can finish them.
+- Updates three files: the milestone file (status + date), TASKS.md (moves to completed table), and CLAUDE.md (current status line).
+- If `tasks/reference/` exists, offers to archive the milestone file there.
+- Appends full `/session-help` output with `→` pointing to `/milestone-new`.
+
+---
+
 ### /project-new
 
 Scaffold a complete project management document set for a new project. Generates lean, structured files that serve as living reference, not growing logs. Gathers project information interactively, then creates all files in one pass.
@@ -618,52 +677,102 @@ After scaffolding, the developer should:
 
 ---
 
-### /bugfix-status
+### /session-help
 
-Show the current status of bug fixes for this session's project. Reads bug fix files from the `bugs/` directory and displays a summary.
+Show available skills with context-aware suggestions based on current session state. Highlights the most useful next steps with a `→` indicator.
 
-**Source file**: `skills/bugfix-status.md`
+**Source file**: `skills/session-help.md`
 
 ---
 
 #### Syntax
 
 ```
-/bugfix-status [bug-number | "all" | project-folder]
+/session-help
+```
+
+#### Parameters
+
+None. Reads all state automatically from session files, project files, and bug directory.
+
+#### Output
+
+```
+Session: hourlings (a1b2c3d4)
+Milestone: 21.8 - Accessibility (3/7 tasks, 43%)
+Last saved: 2026-04-18 14:32
+
+    /session-start     Initialize a new session with project context
+    /session-resume    Restore a previously saved session
+  → /session-save      Save current session (last saved 3 days ago)
+    /session-help      This screen
+
+    /project-new       Scaffold project docs for a new or existing repo
+
+  → /milestone-status  Show active milestone progress
+  → /milestone-start   Continue from Task 4
+  → /task-complete     Mark a task done and bump version
+    /milestone-new     Scaffold a new milestone file
+
+    /bug-status        Show open bugs
+    /bug-add           Create a new bug from template
+    /bug-fixed         Mark a bug as resolved
+
+→ = suggested next step based on current session state
+```
+
+#### Notes
+
+- The `→` indicator is context-sensitive. It changes based on session state, milestone progress, saved state age, and open bugs.
+- Parenthetical hints appear after commands when extra context is useful (e.g. "last saved 3 days ago", "continue from Task 4").
+- Other skills (`/task-complete`, `/bug-fixed`, `/session-save`) append session-help output at the end of their own output.
+
+---
+
+### /bug-status
+
+Show the current status of bugs for this session's project. Reads bug files from the `bugs/` directory and displays a summary.
+
+**Source file**: `skills/bug-status.md`
+
+---
+
+#### Syntax
+
+```
+/bug-status [bug-number | "all" | project-folder]
 ```
 
 #### Parameters
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `bug-number` | number | No | Show details for a specific bug fix |
+| `bug-number` | number | No | Show details for a specific bug |
 | `"all"` | string | No | Include resolved bugs in the listing |
 | `project-folder` | string | No | Override BASE_DIR from session |
-
-Project directory is resolved automatically from the session file. Pass a folder name as the first argument only if you need to override the session.
 
 #### Argument Patterns
 
 | Invocation | Behavior |
 |---|---|
-| `/bugfix-status` | Show all open bug fixes using session project |
-| `/bugfix-status 42` | Show full details for bug fix 42 |
-| `/bugfix-status all` | Show all bugs including resolved |
-| `/bugfix-status hourlings-ui` | Override project folder |
+| `/bug-status` | Show all open bugs using session project |
+| `/bug-status 42` | Show full details for bug 0042 |
+| `/bug-status all` | Show all bugs including resolved |
+| `/bug-status hourlings-ui` | Override project folder |
 
 #### Output (summary)
 
 ```
 Session: [label] ([TERMINAL_ID 8 chars]), [BASE_DIR]
 ────────────────────────────────────────
-Bug Fixes: [X] open, [Y] resolved
+Bugs: [X] open, [Y] resolved
 
-| #   | Title              | Priority | Status      | Created    |
-|-----|--------------------|----------|-------------|------------|
-| 42  | Login timeout      | HIGH     | in progress | 2026-04-09 |
-| 41  | Missing avatar     | MEDIUM   | pending     | 2026-04-08 |
+| #    | Title              | Priority | Status      | Created    |
+|------|--------------------|----------|-------------|------------|
+| 0042 | Login timeout      | HIGH     | in progress | 2026-04-09 |
+| 0041 | Missing avatar     | MEDIUM   | pending     | 2026-04-08 |
 
-Next: Bug Fix 42: Login timeout (HIGH, in progress)
+Next: Bug 0042: Login timeout (HIGH, in progress)
 ```
 
 #### Output (single bug)
@@ -671,10 +780,10 @@ Next: Bug Fix 42: Login timeout (HIGH, in progress)
 ```
 Session: [label] ([TERMINAL_ID 8 chars]), [BASE_DIR]
 ────────────────────────────────────────
-Bug Fix 42: Login timeout
+Bug 0042: Login timeout
 Status:   in progress
 Priority: HIGH
-Branch:   don-040926-bugfix-42-login-timeout
+Branch:   don-040926-bug-0042-login-timeout
 Created:  2026-04-09
 
 Summary:
@@ -689,24 +798,110 @@ Affected Files:
 - src/pages/LoginPage.tsx
 ```
 
-#### Examples
+#### Notes
+
+- Reads files matching `Bug_????_*.md` in `BASE_DIR/bugs/`. Skips `BugFixTemplate.md`.
+- If no `bugs/` directory exists, suggests running `/bug-add` or `/project-new`.
+- Default view shows only open bugs (pending + in progress). Pass `all` to include resolved.
+
+---
+
+### /bug-add
+
+Create a new bug file from the project's BugFixTemplate.md with an auto-incremented number.
+
+**Source file**: `skills/bug-add.md`
+
+---
+
+#### Syntax
 
 ```
-# With active session, show open bugs
-/bugfix-status
+/bug-add [title]
+```
 
-# Details on a specific bug
-/bugfix-status 42
+#### Parameters
 
-# Include resolved bugs
-/bugfix-status all
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `title` | string | No | Short title for the bug. If omitted, prompts interactively. |
+
+#### Argument Patterns
+
+| Invocation | Behavior |
+|---|---|
+| `/bug-add` | Prompt for title, priority, summary |
+| `/bug-add login timeout on slow connections` | Use title from arguments, prompt for priority and summary |
+
+#### Output
+
+```
+Session: [label] ([TERMINAL_ID 8 chars])
+────────────────────────────────────────
+Created: bugs/Bug_0003_login-timeout-slow-connections.md
+
+  Bug:      0003 - Login timeout on slow connections
+  Priority: HIGH
+  Version:  0.8.15.4
+  Branch:   don-042126-bug-0003-login-timeout-slow-connections
+
+Fill in Steps to Reproduce and begin investigation.
+Run /bug-status 3 to review, /bug-fixed 3 when resolved.
 ```
 
 #### Notes
 
-- Reads files matching `BugFix-*.md` in `BASE_DIR/bugs/`. Skips `BugFixTemplate.md`.
-- If no `bugs/` directory exists, suggests running `/bug-fix` or `/project-new`.
-- Default view shows only open bugs (pending + in progress). Pass `all` to include resolved.
+- Auto-increments bug number by finding the highest existing `Bug_????_*.md` and adding 1. Starts at 0001.
+- Reads `BugFixTemplate.md` from `BASE_DIR/bugs/`. Falls back to a minimal built-in template if not found.
+- Only prompts for title, priority, and summary. All other sections (Steps to Reproduce, Root Cause, Fix Plan, etc.) are left as template placeholders.
+
+---
+
+### /bug-fixed
+
+Mark a bug as resolved. Updates status, fills in resolution date, and shows session help.
+
+**Source file**: `skills/bug-fixed.md`
+
+---
+
+#### Syntax
+
+```
+/bug-fixed [number]
+```
+
+#### Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `number` | number | Yes | The bug number to resolve (e.g. 3 or 0003) |
+
+#### Argument Patterns
+
+| Invocation | Behavior |
+|---|---|
+| `/bug-fixed 3` | Resolve bug 0003 |
+| `/bug-fixed 0003` | Resolve bug 0003 |
+| `/bug-fixed hourlings-ui 3` | Override BASE_DIR, resolve bug 0003 |
+
+#### Output
+
+```
+Session: [label] ([TERMINAL_ID 8 chars])
+────────────────────────────────────────
+Resolved: Bug 0003 - Login timeout on slow connections
+  HIGH | Created 2026-04-09 | Resolved 2026-04-21
+
+[session-help output follows]
+```
+
+#### Notes
+
+- If no bug number provided, lists open bugs and prompts for selection.
+- If the bug is already resolved, reports the existing resolution date and stops.
+- Prompts for resolution notes if the Resolution Notes section is still empty.
+- Appends full `/session-help` output after the resolution confirmation.
 
 ---
 
@@ -751,7 +946,7 @@ Defines how skills locate and load the session file, resolve `BASE_DIR` and `API
 
 ### /internal:CreateTemplates
 
-Defines how to generate MilestoneTemplate.md and BugFixTemplate.md when scaffolding a new project. Referenced by `/project-new` and `/bug-fix`.
+Defines how to generate MilestoneTemplate.md and BugFixTemplate.md when scaffolding a new project. Referenced by `/project-new` and `/bug-add`.
 
 **Source file**: `skills/internal/CreateTemplates.md`
 

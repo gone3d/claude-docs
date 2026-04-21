@@ -42,7 +42,27 @@ Once you're at the GitHub root, run `/session-start` to register which projects 
 /session-start
 ```
 
-This writes a session file keyed to your terminal's unique ID. Every other skill, `/milestone-status`, `/task-complete`, `/milestone-new`, reads that file automatically. You don't pass folder names again for the rest of the session.
+This writes a session file keyed to your terminal's unique ID. Every other skill, `/milestone-status`, `/task-complete`, `/milestone-new`, `/bug-status`, reads that file automatically. You don't pass folder names again for the rest of the session.
+
+### Saving and Resuming
+
+Before ending a session, save your context:
+
+```
+/session-save stopped mid-refactor on the auth service
+```
+
+Next time, restore it instead of re-running `/session-start`:
+
+```
+/session-resume
+```
+
+This re-initializes the session, verifies project files haven't drifted, and gives you a full briefing including any notes you saved.
+
+### Finding Your Way
+
+Run `/session-help` at any time to see all available commands with context-aware suggestions. It reads your current session state and highlights the most useful next steps with a `→` indicator.
 
 ### Multiple Terminals, No Conflicts
 
@@ -172,13 +192,19 @@ claude
     ↓
 /session-start my-app-ui my-app-api     ← do this once
     ↓
-[work: /milestone-status, /task-complete, etc.]
+/session-help                            ← see what's available, what to do next
+    ↓
+[work: /milestone-start, /task-complete, /milestone-complete, /bug-add, etc.]
+    ↓
+/session-save working on task 3          ← save before closing
     ↓
 [end of day, close terminal]
     ↓
 [next day, open new terminal]
     ↓
-/session-start my-app-ui my-app-api     ← do it again (new terminal = new session ID)
+/session-resume                          ← picks up where you left off
+    ↓
+[or /session-start my-app-ui my-app-api  ← fresh start if preferred]
 ```
 
 The session file from yesterday is stale (>24 hours old). Skills will warn you. Re-running `/session-start` takes 10 seconds and ensures Claude has current project state.

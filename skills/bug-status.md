@@ -20,31 +20,31 @@ Read `[CWD]/.claude-sessions/[TERMINAL_ID].json` to get project directories.
 
 ## Step 2: Parse Arguments
 
-$ARGUMENTS may contain an optional bug fix number or filter:
+$ARGUMENTS may contain an optional bug number or filter:
 
 | Invocation | Behavior |
 |---|---|
-| `/bugfix-status` | Show all open bug fixes from session's BASE_DIR |
-| `/bugfix-status 42` | Show details for bug fix 42 specifically |
-| `/bugfix-status all` | Show all bug fixes including resolved |
-| `/bugfix-status hourlings-ui` | Override BASE_DIR (ignores session file) |
+| `/bug-status` | Show all open bugs from session's BASE_DIR |
+| `/bug-status 42` | Show details for bug 42 specifically |
+| `/bug-status all` | Show all bugs including resolved |
+| `/bug-status hourlings-ui` | Override BASE_DIR (ignores session file) |
 
-If $ARGUMENTS is a folder name that exists as a directory, treat it as a BASE_DIR override. If it's a number, treat it as a bug fix number. If it's "all", show resolved bugs too.
+If $ARGUMENTS is a folder name that exists as a directory, treat it as a BASE_DIR override. If it's a number, treat it as a bug number. If it's "all", show resolved bugs too.
 
 ---
 
-## Step 3: Find Bug Fix Files
+## Step 3: Find Bug Files
 
-Look in `BASE_DIR/bugs/` for files matching the pattern `BugFix-*.md`. Skip `BugFixTemplate.md`.
+Look in `BASE_DIR/bugs/` for files matching the pattern `Bug_????_*.md`. Skip `BugFixTemplate.md`.
 
-If no `bugs/` directory exists, report: "No bugs/ directory found in [BASE_DIR]. Run `/bug-fix` to create your first bug fix, or `/project-new` to scaffold the full project structure."
+If no `bugs/` directory exists, report: "No bugs/ directory found in [BASE_DIR]. Run `/bug-add` to create your first bug, or `/project-new` to scaffold the full project structure."
 
 ---
 
 ## Step 4: Read and Parse
 
-For each bug fix file, extract from the header:
-- **Number and title** from the `# Bug Fix NNN: [Title]` heading
+For each bug file, extract from the header:
+- **Number and title** from the `# Bug ####: [Title]` heading
 - **Status**: pending, in progress, resolved
 - **Priority**: CRITICAL, HIGH, MEDIUM, LOW
 - **Date Created**
@@ -55,14 +55,14 @@ For each bug fix file, extract from the header:
 
 ## Step 5: Report
 
-### Single Bug Fix (number provided)
+### Single Bug (number provided)
 
-If a specific bug fix number was given, show full detail:
+If a specific bug number was given, show full detail:
 
 ```
 Session: [label] ([TERMINAL_ID 8 chars]), [BASE_DIR]
 ────────────────────────────────────────
-Bug Fix 42: [Title]
+Bug 0042: [Title]
 Status:   [status]
 Priority: [priority]
 Branch:   [branch name]
@@ -80,25 +80,25 @@ Affected Files:
 - path/to/file2
 ```
 
-### All Bug Fixes (default or "all")
+### All Bugs (default or "all")
 
 Show a summary table. By default, only show open bugs (pending + in progress). If "all" was passed, include resolved.
 
 ```
 Session: [label] ([TERMINAL_ID 8 chars]), [BASE_DIR]
 ────────────────────────────────────────
-Bug Fixes: [X] open, [Y] resolved
+Bugs: [X] open, [Y] resolved
 
-| #   | Title              | Priority | Status      | Created    |
-|-----|--------------------|----------|-------------|------------|
-| 42  | Login timeout      | HIGH     | in progress | 2026-04-09 |
-| 41  | Missing avatar     | MEDIUM   | pending     | 2026-04-08 |
-| 40  | CSS overflow       | LOW      | resolved    | 2026-04-05 |
+| #    | Title              | Priority | Status      | Created    |
+|------|--------------------|----------|-------------|------------|
+| 0042 | Login timeout      | HIGH     | in progress | 2026-04-09 |
+| 0041 | Missing avatar     | MEDIUM   | pending     | 2026-04-08 |
+| 0040 | CSS overflow       | LOW      | resolved    | 2026-04-05 |
 
-Next: Bug Fix 42: Login timeout (HIGH, in progress)
+Next: Bug 0042: Login timeout (HIGH, in progress)
 ```
 
-If no open bug fixes exist, report: "No open bug fixes. Nice work."
+If no open bugs exist, report: "No open bugs. Nice work."
 
 ### Status Display
 

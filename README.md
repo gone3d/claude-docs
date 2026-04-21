@@ -14,11 +14,18 @@ It also serves as the reference material for the **VoodooCode** guide series.
 claude-docs/
 ├── skills/                      # Source files for ~/.claude/commands/ slash commands
 │   ├── session-start.md         # /session-start: initialize session with project context
+│   ├── session-save.md          # /session-save: save session state for later
+│   ├── session-resume.md        # /session-resume: restore a saved session
+│   ├── session-help.md          # /session-help: context-aware command guide
+│   ├── project-new.md           # /project-new: scaffold a complete project doc set
 │   ├── milestone-status.md      # /milestone-status: active milestone progress
 │   ├── milestone-start.md       # /milestone-start: begin/resume milestone work
 │   ├── milestone-new.md         # /milestone-new: scaffold a new milestone
 │   ├── task-complete.md         # /task-complete: mark a task done, update tracker
-│   ├── bugfix-status.md          # /bugfix-status: open bug fix summary
+│   ├── milestone-complete.md    # /milestone-complete: close out a finished milestone
+│   ├── bug-status.md            # /bug-status: open bug summary
+│   ├── bug-add.md               # /bug-add: create a new bug from template
+│   ├── bug-fixed.md             # /bug-fixed: mark a bug as resolved
 │   └── internal/                # Helper docs, not user-facing commands
 │       ├── session-read.md      # /internal:session-read: session context resolution
 │       └── CreateTemplates.md   # /internal:CreateTemplates: template generation reference
@@ -41,12 +48,18 @@ Skills are markdown files that become `/slash-commands` inside Claude Code. They
 | Command             | Description                                                                          |
 | ------------------- | ------------------------------------------------------------------------------------ |
 | `/session-start`    | Reads project docs and gives you a current-state briefing                            |
+| `/session-save`     | Saves current session state for later restoration                                    |
+| `/session-resume`   | Restores a previously saved session with full briefing                               |
+| `/session-help`     | Context-aware command guide with suggested next steps                                |
+| `/project-new`      | Scaffolds a complete project doc set (CLAUDE.md, ARCHITECTURE.md, PRD.md, templates) |
 | `/milestone-status` | Shows active milestone progress: tasks done, what's next                             |
 | `/milestone-start`  | Begins or resumes a milestone, executing tasks in sequence                           |
-| `/milestone-new`    | Scaffolds a new milestone file from template with correct versions                   |
 | `/task-complete`    | Marks a task complete and updates the progress table                                 |
-| `/project-new`      | Scaffolds a complete project doc set (CLAUDE.md, ARCHITECTURE.md, PRD.md, templates) |
-| `/bugfix-status`    | Shows open bug fixes: count, priority, and next to work on                           |
+| `/milestone-complete` | Closes out a finished milestone, updates TASKS.md and CLAUDE.md                    |
+| `/milestone-new`    | Scaffolds a new milestone file from template with correct versions                   |
+| `/bug-status`       | Shows open bugs: count, priority, and next to work on                                |
+| `/bug-add`          | Creates a new bug file from template with auto-numbered ID                           |
+| `/bug-fixed`        | Marks a bug as resolved and shows session help                                       |
 
 See the **[Skill Reference Manual](SkillReferenceManual.md)** for full API-style documentation on each command: syntax, parameters, argument patterns, and examples.
 
@@ -114,14 +127,18 @@ The skills expect this project structure (adjust for your stack):
 
 ```
 your-project/
-├── CLAUDE.md          # Session guide: current status, decisions, workflow rules
-├── TASKS.md           # High-level milestone status table
-├── PLANNING.md        # Technical architecture and roadmap
-├── DECISIONS.md       # Architectural decision records (ADRs)
+├── CLAUDE.md              # Session guide: current status, workflow rules
+├── ARCHITECTURE.md        # Technical architecture, patterns, ADR log
+├── PRD.md                 # Product requirements: vision, goals, MVP
+├── TASKS.md               # Milestone dashboard: status table, backlog links
 ├── tasks/
 │   ├── MilestoneTemplate.md
-│   └── MilestoneX.X.md    # Individual milestone files
-└── package.json       # Version source of truth
+│   ├── MilestoneX.X.md   # Individual milestone files
+│   ├── backlog/           # Future feature files (FF_*.md)
+│   └── reference/         # Archived/completed milestones
+├── bugs/
+│   └── BugFixTemplate.md # Bug fix tracking files
+└── package.json           # Version source of truth
 ```
 
 ---

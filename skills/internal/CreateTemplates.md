@@ -1,4 +1,4 @@
-Internal reference for project templates. Used by `/project-new` and `/bug-fix` when scaffolding files into a new or existing project.
+Internal reference for project templates. Used by `/project-new` and `/bug-add` when scaffolding files into a new or existing project.
 
 This is not a user-facing command. It defines the canonical templates that skills copy into project directories.
 
@@ -9,7 +9,7 @@ This is not a user-facing command. It defines the canonical templates that skill
 | Template | Installed to | Used by |
 |---|---|---|
 | MilestoneTemplate.md | `[project]/tasks/MilestoneTemplate.md` | `/milestone-new`, `/project-new` |
-| BugFixTemplate.md | `[project]/bugs/BugFixTemplate.md` | `/bug-fix`, `/project-new` |
+| BugFixTemplate.md | `[project]/bugs/BugFixTemplate.md` | `/bug-add`, `/project-new` |
 
 ---
 
@@ -58,6 +58,6 @@ When `/project-new` runs, the resulting project should include:
 └── screenshots/
 ```
 
-The `bugs/` folder starts with only the template. Individual bug fix files are created by the `/bug-fix` skill as needed.
+The `bugs/` folder starts with only the template. Individual bug files are created by the `/bug-add` skill as needed, using the naming convention `Bug_NNNN_description.md`.
 
-The `screenshots/` folder starts empty. Bug fix files reference screenshots here using the naming convention `bugfix-NNN-description.png`.
+The `screenshots/` folder starts empty. Bug files reference screenshots here using the naming convention `bug-NNNN-description.png`.
