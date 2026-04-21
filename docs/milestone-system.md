@@ -23,10 +23,12 @@ your-project/
 ├── tasks/
 │   ├── MilestoneTemplate.md     # Template for new milestones
 │   ├── Milestone0.0.1.0.md      # Project initialization
-│   └── Milestone0.0.2.0.md      # First feature milestone
+│   ├── Milestone0.0.2.0.md      # First feature milestone
+│   ├── backlog/                 # Future feature files (FF_*.md)
+│   └── reference/               # Archived/completed milestones
 ├── bugs/
-│   └── BugFixTemplate.md        # Template for bug fix tracking
-└── screenshots/                 # Bug fix screenshots
+│   └── BugFixTemplate.md        # Template for bug tracking
+└── screenshots/                 # Bug screenshots
 ```
 
 **The rule**: All implementation detail, session notes, and task-level decisions belong in milestone files. Root-level docs (`CLAUDE.md`, `ARCHITECTURE.md`, `PRD.md`) stay lean and reference-sized. They don't grow with every session.
@@ -157,8 +159,26 @@ Branches are created from `main`, pushed immediately, and all work for that mile
 
 The milestone system is supported by slash commands:
 
+#### Session
+
 ### `/session-start [folder(s)]`
 Run at the start of every terminal session. Reads `CLAUDE.md`, `TASKS.md`, and the active milestone file, then gives you a current-state briefing.
+
+### `/session-save [notes]`
+Saves current session state (projects, milestone, progress, optional notes) to a file for later restoration. Useful before ending a session or switching contexts.
+
+### `/session-resume`
+Restores a previously saved session. Re-initializes the session for the current terminal, verifies project files haven't changed, and presents a full briefing.
+
+### `/session-help`
+Context-aware command guide. Shows all available skills with `→` indicators highlighting suggested next steps based on current session state, milestone progress, and open bugs.
+
+#### Project Setup
+
+### `/project-new [folder]`
+Scaffolds a complete project doc set: CLAUDE.md, ARCHITECTURE.md, PRD.md, TASKS.md, templates, and a project setup milestone. One-time setup per repo.
+
+#### Milestone Workflow
 
 ### `/milestone-status [version]`
 Shows the active milestone's progress table, next task, and blockers.
@@ -166,14 +186,25 @@ Shows the active milestone's progress table, next task, and blockers.
 ### `/milestone-start [version]`
 Begins or resumes a milestone. Finds the next incomplete task, confirms with you, then executes it. After each task, asks whether to continue to the next. Picks up where you left off if the milestone is partially complete.
 
-### `/milestone-new`
-Scaffolds a new milestone file from the template. Reads `package.json` to calculate the next version automatically. Names the file accordingly.
-
 ### `/task-complete [number]`
 Marks a task complete, updates the progress table, bumps `package.json` version to match. Does not commit anything. You review and commit via GitHub Desktop.
 
-### `/bugfix-status`
-Shows open bug fixes from the `bugs/` directory.
+### `/milestone-complete`
+Closes out a finished milestone. Verifies all tasks are complete, sets the milestone status to "Complete", updates TASKS.md (moves to completed table), updates CLAUDE.md current status, and optionally archives the milestone file to `tasks/reference/`. Shows session help when done.
+
+### `/milestone-new`
+Scaffolds a new milestone file from the template. Reads `package.json` to calculate the next version automatically. Names the file accordingly.
+
+#### Bug Tracking
+
+### `/bug-status`
+Shows open bugs from the `bugs/` directory.
+
+### `/bug-add [title]`
+Creates a new bug file from `BugFixTemplate.md` with auto-incremented number (`Bug_NNNN_description.md`).
+
+### `/bug-fixed [number]`
+Marks a bug as resolved, fills in the resolution date, and shows session help.
 
 ---
 
@@ -218,9 +249,9 @@ Development
 
 Completion
   /task-complete [last]        <- all tasks done
-  [update TASKS.md: move milestone to Completed table]
-  [update CLAUDE.md: update current status]
+  /milestone-complete          <- updates milestone file, TASKS.md, CLAUDE.md
   [you merge PR, deploy]
+  /milestone-new               <- scaffold the next milestone
 ```
 
 ---

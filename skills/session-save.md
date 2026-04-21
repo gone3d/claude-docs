@@ -49,12 +49,20 @@ Examples:
 
 ## Step 4: Write the State File
 
-Create `[CWD]/.claude-sessions/saved-state.md` with this structure:
+Create `[CWD]/.claude-sessions/saved-state.md` with this structure.
+
+First, get the current date and time:
+
+```bash
+date "+%Y-%m-%d %H:%M"
+```
+
+Use the actual output as the saved timestamp below.
 
 ```markdown
 # Saved Session State
 
-**Saved**: [ISO 8601 timestamp]
+**Saved**: [output from the date command above, e.g. 2026-04-21 14:32]
 **Label**: [session label]
 **Projects**: [project folders, comma-separated]
 

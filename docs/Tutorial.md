@@ -238,9 +238,17 @@ Use `/milestone-start` to continue. It picks up at the next incomplete task and 
 
 ---
 
-## Step 10: Create the next milestone
+## Step 10: Complete the milestone
 
-When all tasks are complete:
+When all tasks are complete, close out the milestone:
+
+```
+/milestone-complete
+```
+
+Claude verifies all tasks are done, updates the milestone file status to "Complete", moves it to the completed table in TASKS.md, and updates CLAUDE.md. It then shows `/session-help` with the next suggested step.
+
+## Step 11: Create the next milestone
 
 ```
 /milestone-new
@@ -250,21 +258,21 @@ Claude reads `package.json` (now at 0.0.1.N), bumps PATCH +1 to 0.0.2.0, and cre
 
 ---
 
-## Step 11: Track bug fixes
+## Step 12: Track bug fixes
 
-If you find a bug during development, use `/bugfix-status` to check existing bugs:
-
-```
-/bugfix-status
-```
-
-To create a new bug fix, copy `bugs/BugFixTemplate.md` to a new file (e.g. `bugs/BugFix-001-broken-filter.md`), fill in the details, and create a branch:
+If you find a bug during development, use `/bug-status` to check existing bugs:
 
 ```
-dev-041026-bugfix-001-broken-filter
+/bug-status
 ```
 
-Bug fixes follow the same review-and-commit workflow. When resolved, update the status in the bug fix file.
+To create a new bug, run `/bug-add` with a short title:
+
+```
+/bug-add broken filter on submissions page
+```
+
+This creates a numbered file (e.g. `bugs/Bug_0001_broken-filter-on-submissions-page.md`) and suggests a branch name. Bug fixes follow the same review-and-commit workflow. When resolved, run `/bug-fixed 1`.
 
 ---
 
@@ -296,13 +304,26 @@ If you're only working on one repo today, that's fine. The session covers both, 
 ## Command Reference
 
 ```
-/project-new [folder]           <- scaffold project files (once per repo)
-/session-start [ui] [api]       <- orient Claude (once per terminal session)
-/milestone-status               <- check progress
-/milestone-start [version]      <- begin or resume milestone work
-/task-complete [N]              <- mark task done, bump version
-/milestone-new                  <- scaffold next milestone (auto-versioned)
-/bugfix-status                  <- check open bugs
+Session:
+  /session-start [ui] [api]      <- orient Claude (once per terminal session)
+  /session-save [notes]          <- save session state before closing
+  /session-resume                <- restore a saved session
+  /session-help                  <- show available commands with suggested next steps
+
+Project:
+  /project-new [folder]          <- scaffold project files (once per repo)
+
+Milestones:
+  /milestone-status              <- check progress
+  /milestone-start [version]     <- begin or resume milestone work
+  /task-complete [N]             <- mark task done, bump version
+  /milestone-complete            <- close out a finished milestone
+  /milestone-new                 <- scaffold next milestone (auto-versioned)
+
+Bugs:
+  /bug-status                    <- check open bugs
+  /bug-add [title]               <- create a new bug
+  /bug-fixed [number]            <- mark a bug resolved
 ```
 
 ---

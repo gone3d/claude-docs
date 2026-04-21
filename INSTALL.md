@@ -50,10 +50,17 @@ Claude will create the commands directory if needed and install only the skills 
 After install, start a new Claude Code session and type `/`. You should see the new commands in the autocomplete list:
 
 ```
-/bugfix-status
+/bug-add
+/bug-fixed
+/bug-status
+/milestone-complete
 /milestone-new
 /milestone-start
 /milestone-status
+/project-new
+/session-help
+/session-resume
+/session-save
 /session-start
 /task-complete
 ```
@@ -145,7 +152,7 @@ claude "Copy each .md file from ./skills/ into ~/.claude/commands/, overwriting 
 To remove all skills installed from this repo:
 
 ```bash
-claude "Delete these files from ~/.claude/commands/ if they exist: session-start.md, milestone-status.md, milestone-start.md, milestone-new.md, task-complete.md, bugfix-status.md. Also delete ~/.claude/commands/internal/session-read.md and ~/.claude/commands/internal/CreateTemplates.md. Do not touch any other files. Confirm what was removed."
+claude "Delete these files from ~/.claude/commands/ if they exist: session-start.md, session-save.md, session-resume.md, session-help.md, milestone-status.md, milestone-start.md, milestone-new.md, milestone-complete.md, task-complete.md, project-new.md, bug-status.md, bug-add.md, bug-fixed.md. Also delete ~/.claude/commands/internal/session-read.md and ~/.claude/commands/internal/CreateTemplates.md. Do not touch any other files. Confirm what was removed."
 ```
 
 ---
