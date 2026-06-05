@@ -4,6 +4,48 @@
 
 ---
 
+## 0. Install Claude Code (Skip If Already Installed)
+
+First, check if Claude Code is already installed:
+
+```bash
+claude --version
+```
+
+- **If you see a version number** -- you're good, skip to section 1.
+- **If you see `command not found`** -- continue below.
+
+**Check if npm is available:**
+
+```bash
+npm --version
+```
+
+- **If you see a version number** -- skip to the install step below.
+- **If you see `command not found`** -- you need Node.js first. Install it via Homebrew:
+
+```bash
+brew install node
+```
+
+> No Homebrew either? Install it first: go to [brew.sh](https://brew.sh) and run the one-liner on that page, then come back here.
+
+**Install Claude Code:**
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+**Verify it worked:**
+
+```bash
+claude --version
+```
+
+You should see a version number. If so, continue to section 1.
+
+---
+
 ## The Core Problem
 
 The VS Code extension renders in a webview with full HTML: formatted markdown, collapsible tool results, clean redraws. The terminal uses ANSI escape codes and a scrolling buffer, which means text can overwrite itself, tool output is noisy, and the input prompt behaves like a standard shell.
@@ -14,14 +56,22 @@ Most of this is fixable.
 
 ## 1. Fix the Rendering (Do This First)
 
-The single biggest improvement. Add this to your `~/.zshrc` or `~/.bashrc`:
+The single biggest improvement. First, check whether your shell config file exists:
 
 ```bash
-export CLAUDE_CODE_NO_FLICKER=1
+ls ~/.zshrc
 ```
 
-Apply it immediately:
+**If you see the filename printed back** (file exists), run:
 ```bash
+echo 'export CLAUDE_CODE_NO_FLICKER=1' >> ~/.zshrc
+source ~/.zshrc
+```
+
+**If you see `No such file or directory`** (fresh account), create it first, then run:
+```bash
+touch ~/.zshrc
+echo 'export CLAUDE_CODE_NO_FLICKER=1' >> ~/.zshrc
 source ~/.zshrc
 ```
 
@@ -44,10 +94,19 @@ By default, `Enter` submits. To get multi-line input like VS Code:
 **macOS Terminal.app**: `Shift+Enter` sends the same signal as `Enter`, so it can't be used for newlines. Use `Option+Enter` instead:
 
 1. **Enable Option as Meta key**: Terminal.app → Settings → Profiles → Keyboard → check "Use Option as Meta key"
-2. **Create the keybinding file** at `~/.claude/keybindings.json`:
+2. **Check if the keybinding file already exists**:
+
+```bash
+ls ~/.claude/keybindings.json
+```
+
+- **If you see `No such file or directory`** — create it with the content below.
+- **If the file exists** — open it and merge in the `alt+enter` binding rather than replacing the whole file.
 
 ```json
 {
+  "$schema": "https://www.schemastore.org/claude-code-keybindings.json",
+  "$docs": "https://code.claude.com/docs/en/keybindings",
   "bindings": [
     {
       "context": "Chat",
@@ -59,8 +118,10 @@ By default, `Enter` submits. To get multi-line input like VS Code:
 }
 ```
 
-3. **Restart Terminal.app** (required for the Meta key setting to take effect)
+3. **Open a new terminal tab or window** (the Meta key setting takes effect immediately for new sessions — no full restart needed)
 4. **Test**: Open Claude Code and press `Option+Enter`. It should insert a newline.
+
+> **Tip**: `Ctrl+J` is the built-in default for newline and works in every terminal without any configuration. Use it as a fallback if `Option+Enter` isn't working.
 
 > **Note**: `Cmd+Enter` doesn't work in any terminal emulator. The Cmd modifier isn't passed through to CLI apps. `Option+Enter` is the best Mac-native alternative.
 
@@ -167,7 +228,7 @@ Navigate to Editor Mode → set to `vim`. Gives you normal/insert mode switching
 ## Summary Checklist
 
 ```
-[ ] Add CLAUDE_CODE_NO_FLICKER=1 to ~/.zshrc and source it
+[ ] Run: echo 'export CLAUDE_CODE_NO_FLICKER=1' >> ~/.zshrc && source ~/.zshrc
 [ ] Set up multi-line input (section 2, varies by terminal)
 [ ] Run /statusline and describe what you want
 [ ] Change font in Terminal.app settings (SF Mono or download JetBrains Mono)
